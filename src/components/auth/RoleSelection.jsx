@@ -1,40 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { akunDummy } from '../../data/akunDummy'
+import './RoleSelection.css' // Buat file CSS baru
 
 const RoleSelection = () => {
   const navigate = useNavigate()
-
-  const handleRoleSelect = (role) => {
-    // Untuk demo, langsung login dengan akun dummy
-    let email = ''
-    
-    switch(role) {
-      case 'UMKM':
-        email = 'umkm.b@demo.com' // Default ke UMKM B
-        break
-      case 'INVESTOR':
-        email = 'investor@demo.com'
-        break
-      case 'MENTOR':
-        email = 'mentor@demo.com'
-        break
-      default:
-        return
-    }
-    
-    const user = akunDummy.login(email)
-    if (user) {
-      // Redirect ke dashboard sesuai role
-      if (user.role === 'UMKM') {
-        navigate('/dashboard-umkm')
-      } else if (user.role === 'INVESTOR') {
-        navigate('/dashboard-investor')
-      } else {
-        navigate('/')
-      }
-    }
-  }
+  const [selectedRole, setSelectedRole] = useState('')
+  const [selectedUMKM, setSelectedUMKM] = useState('')
 
   const roles = [
     {
@@ -60,6 +32,61 @@ const RoleSelection = () => {
     }
   ]
 
+  const umkmOptions = [
+    { id: 'umkm-1', name: 'UMKM A - Warung Kopi Nusantara', email: 'umkm.a@demo.com', skor: 45, status: 'Belum Siap' },
+    { id: 'umkm-2', name: 'UMKM B - Batik Kreatif Indonesia', email: 'umkm.b@demo.com', skor: 68, status: 'Siap dengan Catatan' },
+    { id: 'umkm-3', name: 'UMKM C - EcoPack Solution', email: 'umkm.c@demo.com', skor: 82, status: 'Layak Dipresentasikan' }
+  ]
+
+  const handleRoleSelect = (role) => {
+    setSelectedRole(role)
+    if (role !== 'UMKM') {
+      handleLogin(role)
+    }
+  }
+
+  const handleUMKMSelect = (umkm) => {
+    setSelectedUMKM(umkm)
+    handleLogin('UMKM', umkm.email)
+  }
+
+  const handleLogin = (role, specificEmail = '') => {
+    let email = ''
+    let password = 'password123'
+    
+    if (specificEmail) {
+      email = specificEmail
+    } else {
+      switch(role) {
+        case 'UMKM':
+          // Default ke UMKM B jika tidak dipilih spesifik
+          email = 'umkm.b@demo.com'
+          break
+        case 'INVESTOR':
+          email = 'investor@demo.com'
+          break
+        case 'MENTOR':
+          email = 'mentor@demo.com'
+          break
+        default:
+          return
+      }
+    }
+    
+    // Login dengan akun dummy
+    const user = akunDummy.login(email)
+    if (user) {
+      // Redirect ke dashboard sesuai role
+      if (user.role === 'UMKM') {
+        navigate('/dashboard-umkm')
+      } else if (user.role === 'INVESTOR') {
+        navigate('/dashboard-investor')
+      } else {
+        navigate('/')
+      }
+    }
+  }
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
@@ -73,20 +100,76 @@ const RoleSelection = () => {
         {roles.map((role) => (
           <div 
             key={role.id} 
-            style={styles.roleCard}
+            style={{
+              ...styles.roleCard,
+              borderColor: selectedRole === role.id ? role.color : '#e5e7eb',
+              transform: selectedRole === role.id ? 'translateY(-5px)' : 'none'
+            }}
             onClick={() => handleRoleSelect(role.id)}
           >
-            <div style={{ ...styles.roleIcon, backgroundColor: role.color + '20', color: role.color }}>
+            <div style={styles.roleIcon} style={{ backgroundColor: role.color + '20', color: role.color }}>
               {role.icon}
             </div>
             <h3 style={styles.roleTitle}>{role.title}</h3>
             <p style={styles.roleDesc}>{role.description}</p>
-            <button style={{ ...styles.selectBtn, backgroundColor: role.color }}>
+            <button style={{...styles.selectBtn, backgroundColor: role.color }}>
               Pilih {role.title}
             </button>
           </div>
         ))}
       </div>
+
+      {/* Pilihan UMKM Spesifik */}
+      {selectedRole === 'UMKM' && (
+        <div style={styles.umkmSelection}>
+          <h3 style={styles.umkmTitle}>Pilih Akun UMKM untuk Demo:</h3>
+          <div style={styles.umkmGrid}>
+            {umkmOptions.map((umkm) => (
+              <div 
+                key={umkm.id}
+                style={{
+                  ...styles.umkmCard,
+                  borderColor: selectedUMKM === umkm.id ? '#3b82f6' : '#e5e7eb',
+                  backgroundColor: selectedUMKM === umkm.id ? '#eff6ff' : 'white'
+                }}
+                onClick={() => handleUMKMSelect(umkm)}
+              >
+                <div style={styles.umkmHeader}>
+                  <div style={styles.umkmName}>{umkm.name.split(' - ')[0]}</div>
+                  <div style={styles.umkmDetail}>{umkm.name.split(' - ')[1]}</div>
+                </div>
+                <div style={styles.umkmInfo}>
+                  <div style={styles.umkmStatus}>
+                    <span style={styles.statusLabel}>Status:</span>
+                    <span style={{
+                      ...styles.statusValue,
+                      color: umkm.skor < 50 ? '#ef4444' : umkm.skor < 70 ? '#f59e0b' : '#10b981'
+                    }}>
+                      {umkm.status}
+                    </span>
+                  </div>
+                  <div style={styles.umkmScore}>
+                    <span style={styles.scoreLabel}>Skor:</span>
+                    <span style={styles.scoreValue}>{umkm.skor}%</span>
+                  </div>
+                </div>
+                <div style={styles.umkmEmail}>
+                  <small>{umkm.email}</small>
+                </div>
+                <button 
+                  style={styles.loginBtn}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleUMKMSelect(umkm)
+                  }}
+                >
+                  Login sebagai {umkm.name.split(' - ')[0]}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div style={styles.disclaimer}>
         <p><strong>Catatan Khusus untuk Mentor/Reviewer:</strong></p>
@@ -102,15 +185,11 @@ const RoleSelection = () => {
       <div style={styles.demoAccounts}>
         <h4 style={styles.demoTitle}>Akun Dummy Tersedia:</h4>
         <div style={styles.accountList}>
-          <div style={styles.accountItem}>
-            <strong>UMKM A:</strong> umkm.a@demo.com (Belum Siap)
-          </div>
-          <div style={styles.accountItem}>
-            <strong>UMKM B:</strong> umkm.b@demo.com (Siap dengan Catatan)
-          </div>
-          <div style={styles.accountItem}>
-            <strong>UMKM C:</strong> umkm.c@demo.com (Layak Dipresentasikan)
-          </div>
+          {umkmOptions.map((umkm) => (
+            <div key={umkm.id} style={styles.accountItem}>
+              <strong>{umkm.name.split(' - ')[0]}:</strong> {umkm.email} ({umkm.status})
+            </div>
+          ))}
           <div style={styles.accountItem}>
             <strong>Investor:</strong> investor@demo.com
           </div>
@@ -118,6 +197,9 @@ const RoleSelection = () => {
             <strong>Mentor:</strong> mentor@demo.com
           </div>
         </div>
+        <p style={styles.passwordNote}>
+          <small>Password semua akun: <strong>password123</strong></small>
+        </p>
       </div>
     </div>
   )
@@ -125,7 +207,7 @@ const RoleSelection = () => {
 
 const styles = {
   container: {
-    maxWidth: '1000px',
+    maxWidth: '1200px',
     margin: '0 auto',
     padding: '2rem 1rem'
   },
@@ -142,12 +224,12 @@ const styles = {
   subtitle: {
     fontSize: '1.125rem',
     color: '#6b7280',
-    maxWidth: '600px',
+    maxWidth: '800px',
     margin: '0 auto'
   },
   roleGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
     gap: '2rem',
     marginBottom: '3rem'
   },
@@ -156,10 +238,10 @@ const styles = {
     padding: '2rem',
     borderRadius: '1rem',
     boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    border: '1px solid #e5e7eb',
+    border: '2px solid #e5e7eb',
     textAlign: 'center',
     cursor: 'pointer',
-    transition: 'transform 0.2s, box-shadow 0.2s'
+    transition: 'all 0.3s ease'
   },
   roleIcon: {
     width: '5rem',
@@ -169,7 +251,8 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: '2.5rem',
-    margin: '0 auto 1rem'
+    margin: '0 auto 1rem',
+    transition: 'all 0.3s ease'
   },
   roleTitle: {
     fontSize: '1.5rem',
@@ -192,7 +275,101 @@ const styles = {
     cursor: 'pointer',
     fontWeight: '600',
     width: '100%',
-    fontSize: '1rem'
+    fontSize: '1rem',
+    transition: 'all 0.3s ease'
+  },
+  umkmSelection: {
+    backgroundColor: '#f8fafc',
+    padding: '2rem',
+    borderRadius: '1rem',
+    marginBottom: '2rem',
+    border: '1px solid #e2e8f0'
+  },
+  umkmTitle: {
+    fontSize: '1.5rem',
+    fontWeight: '600',
+    color: '#1f2937',
+    marginBottom: '1.5rem',
+    textAlign: 'center'
+  },
+  umkmGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+    gap: '1.5rem'
+  },
+  umkmCard: {
+    backgroundColor: 'white',
+    padding: '1.5rem',
+    borderRadius: '0.75rem',
+    border: '2px solid #e5e7eb',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease'
+  },
+  umkmHeader: {
+    marginBottom: '1rem'
+  },
+  umkmName: {
+    fontSize: '1.125rem',
+    fontWeight: 'bold',
+    color: '#1f2937',
+    marginBottom: '0.25rem'
+  },
+  umkmDetail: {
+    fontSize: '0.875rem',
+    color: '#6b7280'
+  },
+  umkmInfo: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: '1rem',
+    paddingBottom: '1rem',
+    borderBottom: '1px solid #e5e7eb'
+  },
+  umkmStatus: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  statusLabel: {
+    fontSize: '0.75rem',
+    color: '#6b7280',
+    marginBottom: '0.25rem'
+  },
+  statusValue: {
+    fontWeight: '600',
+    fontSize: '0.875rem'
+  },
+  umkmScore: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end'
+  },
+  scoreLabel: {
+    fontSize: '0.75rem',
+    color: '#6b7280',
+    marginBottom: '0.25rem'
+  },
+  scoreValue: {
+    fontWeight: 'bold',
+    fontSize: '1.125rem',
+    color: '#1f2937'
+  },
+  umkmEmail: {
+    fontSize: '0.75rem',
+    color: '#9ca3af',
+    marginBottom: '1rem',
+    textAlign: 'center'
+  },
+  loginBtn: {
+    backgroundColor: '#3b82f6',
+    color: 'white',
+    padding: '0.75rem',
+    border: 'none',
+    borderRadius: '0.5rem',
+    cursor: 'pointer',
+    fontWeight: '600',
+    width: '100%',
+    fontSize: '0.875rem',
+    transition: 'all 0.3s ease'
   },
   disclaimer: {
     backgroundColor: '#f0f9ff',
@@ -227,7 +404,8 @@ const styles = {
   accountList: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '0.5rem'
+    gap: '0.75rem',
+    marginBottom: '1rem'
   },
   accountItem: {
     padding: '0.75rem',
@@ -235,6 +413,12 @@ const styles = {
     borderRadius: '0.375rem',
     border: '1px solid #e5e7eb',
     fontSize: '0.875rem'
+  },
+  passwordNote: {
+    textAlign: 'center',
+    color: '#6b7280',
+    fontSize: '0.75rem',
+    fontStyle: 'italic'
   }
 }
 
