@@ -1,190 +1,692 @@
 export const umkmDummy = [
   {
-    id: 'umkm-1',
-    namaUsaha: 'Warung Kopi Nusantara',
-    pemilik: 'Budi Santoso',
-    email: 'umkm.a@demo.com',
-    whatsapp: '+6281234567890',
-    statusUsaha: 'Berjalan (1-3 tahun)',
-    omzetRange: 'Rp 50-100 juta/tahun',
-    karyawan: '2-5 orang',
-    legalitas: 'Belum berbadan hukum',
-    
-    masalah: {
-      masalahUtama: 'Manajemen keuangan tidak tertata',
-      solusi: 'Sedang mencoba software akuntansi sederhana',
-      bukti: 'Laporan keuangan manual',
-      risikoTerburuk: 'Kebangkrutan dalam 6 bulan jika tidak ada perbaikan',
-      penggunaanDana: 'Modal kerja dan pembelian peralatan',
-      kesediaanTransparansi: 'Ya, dengan batasan tertentu'
+    id: 1,
+    nama: 'Kopi Lereng Arjuna',
+    statusUsaha: 'Berjalan',
+    omzet: '25-50 jt/bulan',
+    skorAwal: 58,
+    skorSekarang: 72,
+    risikoUtama: 'Operasional',
+    status: 'Layak Ditampilkan',
+    skorDetail: {
+      legalitas: 65,
+      modelBisnis: 78,
+      keuangan: 70,
+      operasional: 75
     },
-    
-    skor: {
-      total: 45,
+    tahap: 3,
+    kontak: '+6281234567890',
+    lokasi: 'Malang, Jawa Timur',
+    usiaUsaha: '3 tahun',
+    karyawan: 8,
+    kategori: 'Makanan & Minuman',
+    update: '2024-01-20'
+  },
+  {
+    id: 2,
+    nama: 'Kerajinan Rotan Tradisional',
+    statusUsaha: 'Berjalan',
+    omzet: '10-25 jt/bulan',
+    skorAwal: 68,
+    skorSekarang: 68,
+    risikoUtama: 'Pemasaran',
+    status: 'Layak Ditampilkan',
+    skorDetail: {
+      legalitas: 70,
+      modelBisnis: 65,
+      keuangan: 72,
+      operasional: 65
+    },
+    tahap: 2,
+    kontak: '+6282233445566',
+    lokasi: 'Cirebon, Jawa Barat',
+    usiaUsaha: '5 tahun',
+    karyawan: 12,
+    kategori: 'Kerajinan',
+    update: '2024-01-18'
+  },
+  {
+    id: 3,
+    nama: 'Snack Pisang Lokal',
+    statusUsaha: 'Berjalan',
+    omzet: '5-10 jt/bulan',
+    skorAwal: 45,
+    skorSekarang: 45,
+    risikoUtama: 'Legalitas',
+    status: 'Belum Siap',
+    skorDetail: {
       legalitas: 30,
-      kejelasanUsaha: 60,
-      realistisKeuangan: 40,
-      risikoOperasional: 50,
-      masalahUtama: ['Arus kas tidak jelas', 'Target pasar terlalu umum'],
-      rekomendasi: 'Fokus pada pembukuan dasar sebelum mencari investor'
+      modelBisnis: 50,
+      keuangan: 55,
+      operasional: 45
     },
-    
-    timelinePerbaikan: [
-      {
-        date: '2024-01-10',
-        action: 'Melengkapi data dasar usaha',
-        perubahan: 'Data omzet dan karyawan diperbarui'
-      },
-      {
-        date: '2024-01-12',
-        action: 'Upload dokumen pendukung',
-        perubahan: 'Tambahan foto usaha dan produk'
-      }
-    ],
-    
-    catatanSistem: [
-      'Legalitas dasar belum memadai untuk investasi',
-      'Perlu bukti konsistensi omzet minimal 6 bulan',
-      'Struktur biaya operasional belum jelas'
-    ],
-    
-    statusInvestor: 'hidden',
-    tanggalBergabung: '2024-01-05'
+    tahap: 1,
+    kontak: '+6283344556677',
+    lokasi: 'Bogor, Jawa Barat',
+    usiaUsaha: '1 tahun',
+    karyawan: 3,
+    kategori: 'Makanan',
+    update: '2024-01-15'
   },
-  
   {
-    id: 'umkm-2',
-    namaUsaha: 'Batik Kreatif Indonesia',
-    pemilik: 'Siti Aminah',
-    email: 'umkm.b@demo.com',
-    whatsapp: '+6282345678901',
-    statusUsaha: 'Berjalan (3-5 tahun)',
-    omzetRange: 'Rp 200-500 juta/tahun',
-    karyawan: '10-15 orang',
-    legalitas: 'CV',
-    
-    masalah: {
-      masalahUtama: 'Ekspansi pasar terhambat modal',
-      solusi: 'Sudah memiliki rencana pemasaran digital',
-      bukti: 'Analisis pasar dan kompetitor',
-      risikoTerburuk: 'Pertumbuhan stagnan',
-      penggunaanDana: 'Ekspansi produksi dan marketing',
-      kesediaanTransparansi: 'Ya, penuh'
-    },
-    
-    skor: {
-      total: 68,
-      legalitas: 80,
-      kejelasanUsaha: 75,
-      realistisKeuangan: 60,
-      risikoOperasional: 65,
-      masalahUtama: ['Perlu stabilisasi arus kas', 'Risiko persaingan tinggi'],
-      rekomendasi: 'Siap presentasi dengan catatan risiko operasional'
-    },
-    
-    timelinePerbaikan: [
-      {
-        date: '2024-01-08',
-        action: 'Perbaikan data keuangan',
-        perubahan: 'Laporan keuangan 3 bulan terakhir'
-      },
-      {
-        date: '2024-01-15',
-        action: 'Analisis pasar',
-        perubahan: 'Data target pasar diperbarui'
-      },
-      {
-        date: '2024-01-18',
-        action: 'Rencana penggunaan dana',
-        perubahan: 'Detail alokasi dana investasi'
-      }
-    ],
-    
-    catatanSistem: [
-      'Arus kas belum stabil sepanjang tahun',
-      'Risiko persaingan di pasar batik cukup tinggi',
-      'Sudah memiliki legalitas yang memadai'
-    ],
-    
-    statusInvestor: 'visible',
-    investorViews: 12,
-    tanggalBergabung: '2024-01-02'
-  },
-  
-  {
-    id: 'umkm-3',
-    namaUsaha: 'EcoPack Solution',
-    pemilik: 'Rudi Hartono',
-    email: 'umkm.c@demo.com',
-    whatsapp: '+6283456789012',
-    statusUsaha: 'Berjalan (>5 tahun)',
-    omzetRange: 'Rp 1-2 M/tahun',
-    karyawan: '20-30 orang',
-    legalitas: 'PT',
-    
-    masalah: {
-      masalahUtama: 'Kebutuhan modal untuk otomasi produksi',
-      solusi: 'Sudah ada prototype mesin otomasi',
-      bukti: 'Studi kelayakan dan R&D',
-      risikoTerburuk: 'Delay implementasi teknologi',
-      penggunaanDana: 'Otomasi dan riset produk baru',
-      kesediaanTransparansi: 'Ya, termasuk audit eksternal'
-    },
-    
-    skor: {
-      total: 82,
+    id: 4,
+    nama: 'Batik Modern Semarang',
+    statusUsaha: 'Berjalan',
+    omzet: '50-100 jt/bulan',
+    skorAwal: 82,
+    skorSekarang: 85,
+    risikoUtama: 'Ekspansi',
+    status: 'Layak Ditampilkan',
+    skorDetail: {
       legalitas: 90,
-      kejelasanUsaha: 85,
-      realistisKeuangan: 80,
-      risikoOperasional: 75,
-      masalahUtama: ['Investasi teknologi berisiko tinggi', 'Lead time implementasi'],
-      rekomendasi: 'Layak dipresentasikan ke investor'
+      modelBisnis: 85,
+      keuangan: 80,
+      operasional: 85
     },
-    
-    timelinePerbaikan: [
-      {
-        date: '2023-12-20',
-        action: 'Penyempurnaan business plan',
-        perubahan: 'Rencana bisnis 3 tahun'
-      },
-      {
-        date: '2024-01-05',
-        action: 'Analisis risiko teknologi',
-        perubahan: 'Mitigasi risiko otomasi'
-      },
-      {
-        date: '2024-01-10',
-        action: 'Persiapan data investor',
-        perubahan: 'Deck presentasi lengkap'
-      }
-    ],
-    
-    catatanSistem: [
-      'Struktur bisnis sudah matang',
-      'Risiko utama pada implementasi teknologi',
-      'Track record keuangan baik'
-    ],
-    
-    statusInvestor: 'featured',
-    investorViews: 25,
-    minatInvestor: 3,
-    tanggalBergabung: '2023-12-15'
+    tahap: 3,
+    kontak: '+6284455667788',
+    lokasi: 'Semarang, Jawa Tengah',
+    usiaUsaha: '8 tahun',
+    karyawan: 25,
+    kategori: 'Fashion',
+    update: '2024-01-22'
+  },
+  {
+    id: 5,
+    nama: 'Susu Kambing Etawa',
+    statusUsaha: 'Berjalan',
+    omzet: '10-25 jt/bulan',
+    skorAwal: 60,
+    skorSekarang: 68,
+    risikoUtama: 'Produksi',
+    status: 'Layak Ditampilkan',
+    skorDetail: {
+      legalitas: 65,
+      modelBisnis: 70,
+      keuangan: 65,
+      operasional: 72
+    },
+    tahap: 2,
+    kontak: '+6285566778899',
+    lokasi: 'Boyolali, Jawa Tengah',
+    usiaUsaha: '4 tahun',
+    karyawan: 6,
+    kategori: 'Peternakan',
+    update: '2024-01-19'
+  },
+  {
+    id: 6,
+    nama: 'Digital Printing Bandung',
+    statusUsaha: 'Berjalan',
+    omzet: '25-50 jt/bulan',
+    skorAwal: 70,
+    skorSekarang: 74,
+    risikoUtama: 'Teknologi',
+    status: 'Layak Ditampilkan',
+    skorDetail: {
+      legalitas: 75,
+      modelBisnis: 72,
+      keuangan: 70,
+      operasional: 79
+    },
+    tahap: 3,
+    kontak: '+6286677889900',
+    lokasi: 'Bandung, Jawa Barat',
+    usiaUsaha: '6 tahun',
+    karyawan: 10,
+    kategori: 'Percetakan',
+    update: '2024-01-21'
+  },
+  {
+    id: 7,
+    nama: 'Wedang Jahe Rempah',
+    statusUsaha: 'Berjalan',
+    omzet: '5-10 jt/bulan',
+    skorAwal: 55,
+    skorSekarang: 62,
+    risikoUtama: 'Bahan Baku',
+    status: 'Perlu Perbaikan',
+    skorDetail: {
+      legalitas: 60,
+      modelBisnis: 65,
+      keuangan: 58,
+      operasional: 65
+    },
+    tahap: 2,
+    kontak: '+6287788990011',
+    lokasi: 'Yogyakarta',
+    usiaUsaha: '2 tahun',
+    karyawan: 4,
+    kategori: 'Minuman',
+    update: '2024-01-17'
+  },
+  {
+    id: 8,
+    nama: 'Furniture Rotan',
+    statusUsaha: 'Berjalan',
+    omzet: '100-250 jt/bulan',
+    skorAwal: 75,
+    skorSekarang: 78,
+    risikoUtama: 'Ekspor',
+    status: 'Layak Ditampilkan',
+    skorDetail: {
+      legalitas: 80,
+      modelBisnis: 78,
+      keuangan: 75,
+      operasional: 79
+    },
+    tahap: 3,
+    kontak: '+6288899001122',
+    lokasi: 'Cirebon, Jawa Barat',
+    usiaUsaha: '10 tahun',
+    karyawan: 35,
+    kategori: 'Furniture',
+    update: '2024-01-23'
+  },
+  {
+    id: 9,
+    nama: 'Kripik Singkong Pedas',
+    statusUsaha: 'Berjalan',
+    omzet: '10-25 jt/bulan',
+    skorAwal: 48,
+    skorSekarang: 48,
+    risikoUtama: 'Persaingan',
+    status: 'Belum Siap',
+    skorDetail: {
+      legalitas: 50,
+      modelBisnis: 48,
+      keuangan: 45,
+      operasional: 49
+    },
+    tahap: 1,
+    kontak: '+6289900112233',
+    lokasi: 'Malang, Jawa Timur',
+    usiaUsaha: '1.5 tahun',
+    karyawan: 5,
+    kategori: 'Makanan',
+    update: '2024-01-14'
+  },
+  {
+    id: 10,
+    nama: 'Kambing Qurban Online',
+    statusUsaha: 'Berjalan',
+    omzet: '50-100 jt/bulan',
+    skorAwal: 72,
+    skorSekarang: 76,
+    risikoUtama: 'Musiman',
+    status: 'Layak Ditampilkan',
+    skorDetail: {
+      legalitas: 78,
+      modelBisnis: 75,
+      keuangan: 72,
+      operasional: 79
+    },
+    tahap: 3,
+    kontak: '+6280011223344',
+    lokasi: 'Bogor, Jawa Barat',
+    usiaUsaha: '5 tahun',
+    karyawan: 8,
+    kategori: 'Peternakan',
+    update: '2024-01-22'
+  },
+  {
+    id: 11,
+    nama: 'Konveksi Kaos Distro',
+    statusUsaha: 'Berjalan',
+    omzet: '25-50 jt/bulan',
+    skorAwal: 65,
+    skorSekarang: 70,
+    risikoUtama: 'Desain',
+    status: 'Layak Ditampilkan',
+    skorDetail: {
+      legalitas: 68,
+      modelBisnis: 72,
+      keuangan: 65,
+      operasional: 75
+    },
+    tahap: 2,
+    kontak: '+6281122334455',
+    lokasi: 'Surabaya, Jawa Timur',
+    usiaUsaha: '4 tahun',
+    karyawan: 15,
+    kategori: 'Fashion',
+    update: '2024-01-20'
+  },
+  {
+    id: 12,
+    nama: 'Madu Hutan Asli',
+    statusUsaha: 'Berjalan',
+    omzet: '10-25 jt/bulan',
+    skorAwal: 62,
+    skorSekarang: 67,
+    risikoUtama: 'Produksi',
+    status: 'Layak Ditampilkan',
+    skorDetail: {
+      legalitas: 65,
+      modelBisnis: 68,
+      keuangan: 63,
+      operasional: 72
+    },
+    tahap: 2,
+    kontak: '+6282233445566',
+    lokasi: 'Lampung',
+    usiaUsaha: '3 tahun',
+    karyawan: 7,
+    kategori: 'Peternakan',
+    update: '2024-01-19'
+  },
+  {
+    id: 13,
+    nama: 'Catering Sehat',
+    statusUsaha: 'Berjalan',
+    omzet: '25-50 jt/bulan',
+    skorAwal: 58,
+    skorSekarang: 65,
+    risikoUtama: 'Operasional',
+    status: 'Perlu Perbaikan',
+    skorDetail: {
+      legalitas: 62,
+      modelBisnis: 68,
+      keuangan: 60,
+      operasional: 70
+    },
+    tahap: 2,
+    kontak: '+6283344556677',
+    lokasi: 'Jakarta Selatan',
+    usiaUsaha: '2 tahun',
+    karyawan: 12,
+    kategori: 'Makanan',
+    update: '2024-01-18'
+  },
+  {
+    id: 14,
+    nama: 'Sabun Herbal Alami',
+    statusUsaha: 'Berjalan',
+    omzet: '5-10 jt/bulan',
+    skorAwal: 52,
+    skorSekarang: 52,
+    risikoUtama: 'Regulasi',
+    status: 'Belum Siap',
+    skorDetail: {
+      legalitas: 45,
+      modelBisnis: 55,
+      keuangan: 50,
+      operasional: 58
+    },
+    tahap: 1,
+    kontak: '+6284455667788',
+    lokasi: 'Bali',
+    usiaUsaha: '1 tahun',
+    karyawan: 4,
+    kategori: 'Kosmetik',
+    update: '2024-01-16'
+  },
+  {
+    id: 15,
+    nama: 'Coffee Shop Modern',
+    statusUsaha: 'Berjalan',
+    omzet: '50-100 jt/bulan',
+    skorAwal: 78,
+    skorSekarang: 81,
+    risikoUtama: 'Lokasi',
+    status: 'Layak Ditampilkan',
+    skorDetail: {
+      legalitas: 82,
+      modelBisnis: 85,
+      keuangan: 78,
+      operasional: 79
+    },
+    tahap: 3,
+    kontak: '+6285566778899',
+    lokasi: 'Jakarta Pusat',
+    usiaUsaha: '5 tahun',
+    karyawan: 20,
+    kategori: 'F&B',
+    update: '2024-01-22'
+  },
+  {
+    id: 16,
+    nama: 'Pengolahan Ikan Asin',
+    statusUsaha: 'Berjalan',
+    omzet: '10-25 jt/bulan',
+    skorAwal: 56,
+    skorSekarang: 63,
+    risikoUtama: 'Bahan Baku',
+    status: 'Perlu Perbaikan',
+    skorDetail: {
+      legalitas: 58,
+      modelBisnis: 65,
+      keuangan: 60,
+      operasional: 69
+    },
+    tahap: 2,
+    kontak: '+6286677889900',
+    lokasi: 'Cilacap, Jawa Tengah',
+    usiaUsaha: '3 tahun',
+    karyawan: 8,
+    kategori: 'Makanan',
+    update: '2024-01-19'
+  },
+  {
+    id: 17,
+    nama: 'Digital Agency',
+    statusUsaha: 'Berjalan',
+    omzet: '25-50 jt/bulan',
+    skorAwal: 70,
+    skorSekarang: 73,
+    risikoUtama: 'SDM',
+    status: 'Layak Ditampilkan',
+    skorDetail: {
+      legalitas: 75,
+      modelBisnis: 78,
+      keuangan: 68,
+      operasional: 71
+    },
+    tahap: 3,
+    kontak: '+6287788990011',
+    lokasi: 'Bandung, Jawa Barat',
+    usiaUsaha: '4 tahun',
+    karyawan: 12,
+    kategori: 'Digital',
+    update: '2024-01-21'
+  },
+  {
+    id: 18,
+    nama: 'Keripik Tempe',
+    statusUsaha: 'Berjalan',
+    omzet: '5-10 jt/bulan',
+    skorAwal: 50,
+    skorSekarang: 50,
+    risikoUtama: 'Inovasi',
+    status: 'Belum Siap',
+    skorDetail: {
+      legalitas: 52,
+      modelBisnis: 48,
+      keuangan: 50,
+      operasional: 50
+    },
+    tahap: 1,
+    kontak: '+6288899001122',
+    lokasi: 'Yogyakarta',
+    usiaUsaha: '2 tahun',
+    karyawan: 5,
+    kategori: 'Makanan',
+    update: '2024-01-15'
+  },
+  {
+    id: 19,
+    nama: 'Pembuatan Meubel',
+    statusUsaha: 'Berjalan',
+    omzet: '100-250 jt/bulan',
+    skorAwal: 80,
+    skorSekarang: 83,
+    risikoUtama: 'Bahan Baku',
+    status: 'Layak Ditampilkan',
+    skorDetail: {
+      legalitas: 85,
+      modelBisnis: 82,
+      keuangan: 80,
+      operasional: 85
+    },
+    tahap: 3,
+    kontak: '+6289900112233',
+    lokasi: 'Jepara, Jawa Tengah',
+    usiaUsaha: '12 tahun',
+    karyawan: 40,
+    kategori: 'Furniture',
+    update: '2024-01-23'
+  },
+  {
+    id: 20,
+    nama: 'Kue Tradisional',
+    statusUsaha: 'Berjalan',
+    omzet: '10-25 jt/bulan',
+    skorAwal: 60,
+    skorSekarang: 65,
+    risikoUtama: 'Dayat Tahan',
+    status: 'Layak Ditampilkan',
+    skorDetail: {
+      legalitas: 65,
+      modelBisnis: 68,
+      keuangan: 62,
+      operasional: 65
+    },
+    tahap: 2,
+    kontak: '+6280011223344',
+    lokasi: 'Solo, Jawa Tengah',
+    usiaUsaha: '6 tahun',
+    karyawan: 10,
+    kategori: 'Makanan',
+    update: '2024-01-20'
+  },
+  {
+    id: 21,
+    nama: 'Aquascape & Ikan Hias',
+    statusUsaha: 'Berjalan',
+    omzet: '25-50 jt/bulan',
+    skorAwal: 68,
+    skorSekarang: 72,
+    risikoUtama: 'Perawatan',
+    status: 'Layak Ditampilkan',
+    skorDetail: {
+      legalitas: 70,
+      modelBisnis: 75,
+      keuangan: 68,
+      operasional: 75
+    },
+    tahap: 3,
+    kontak: '+6281122334455',
+    lokasi: 'Depok, Jawa Barat',
+    usiaUsaha: '5 tahun',
+    karyawan: 8,
+    kategori: 'Hobi',
+    update: '2024-01-21'
+  },
+  {
+    id: 22,
+    nama: 'Bordir Manual',
+    statusUsaha: 'Berjalan',
+    omzet: '5-10 jt/bulan',
+    skorAwal: 55,
+    skorSekarang: 60,
+    risikoUtama: 'SDM',
+    status: 'Perlu Perbaikan',
+    skorDetail: {
+      legalitas: 58,
+      modelBisnis: 62,
+      keuangan: 55,
+      operasional: 65
+    },
+    tahap: 2,
+    kontak: '+6282233445566',
+    lokasi: 'Tasikmalaya, Jawa Barat',
+    usiaUsaha: '3 tahun',
+    karyawan: 6,
+    kategori: 'Kerajinan',
+    update: '2024-01-18'
+  },
+  {
+    id: 23,
+    nama: 'Minuman Boba',
+    statusUsaha: 'Berjalan',
+    omzet: '50-100 jt/bulan',
+    skorAwal: 75,
+    skorSekarang: 78,
+    risikoUtama: 'Trend',
+    status: 'Layak Ditampilkan',
+    skorDetail: {
+      legalitas: 78,
+      modelBisnis: 80,
+      keuangan: 75,
+      operasional: 79
+    },
+    tahap: 3,
+    kontak: '+6283344556677',
+    lokasi: 'Surabaya, Jawa Timur',
+    usiaUsaha: '4 tahun',
+    karyawan: 25,
+    kategori: 'Minuman',
+    update: '2024-01-22'
+  },
+  {
+    id: 24,
+    nama: 'Pembuatan Tas',
+    statusUsaha: 'Berjalan',
+    omzet: '10-25 jt/bulan',
+    skorAwal: 62,
+    skorSekarang: 67,
+    risikoUtama: 'Desain',
+    status: 'Layak Ditampilkan',
+    skorDetail: {
+      legalitas: 65,
+      modelBisnis: 70,
+      keuangan: 63,
+      operasional: 70
+    },
+    tahap: 2,
+    kontak: '+6284455667788',
+    lokasi: 'Garut, Jawa Barat',
+    usiaUsaha: '5 tahun',
+    karyawan: 12,
+    kategori: 'Fashion',
+    update: '2024-01-19'
+  },
+  {
+    id: 25,
+    nama: 'Warung Kopi Tradisional',
+    statusUsaha: 'Berjalan',
+    omzet: '5-10 jt/bulan',
+    skorAwal: 48,
+    skorSekarang: 48,
+    risikoUtama: 'Persaingan',
+    status: 'Belum Siap',
+    skorDetail: {
+      legalitas: 50,
+      modelBisnis: 45,
+      keuangan: 48,
+      operasional: 49
+    },
+    tahap: 1,
+    kontak: '+6285566778899',
+    lokasi: 'Magelang, Jawa Tengah',
+    usiaUsaha: '2 tahun',
+    karyawan: 3,
+    kategori: 'F&B',
+    update: '2024-01-16'
+  },
+  {
+    id: 26,
+    nama: 'Konveksi Seragam',
+    statusUsaha: 'Berjalan',
+    omzet: '100-250 jt/bulan',
+    skorAwal: 82,
+    skorSekarang: 85,
+    risikoUtama: 'Pesanan',
+    status: 'Layak Ditampilkan',
+    skorDetail: {
+      legalitas: 85,
+      modelBisnis: 88,
+      keuangan: 80,
+      operasional: 87
+    },
+    tahap: 3,
+    kontak: '+6286677889900',
+    lokasi: 'Tangerang, Banten',
+    usiaUsaha: '15 tahun',
+    karyawan: 50,
+    kategori: 'Konveksi',
+    update: '2024-01-23'
+  },
+  {
+    id: 27,
+    nama: 'Kebab Turki',
+    statusUsaha: 'Berjalan',
+    omzet: '25-50 jt/bulan',
+    skorAwal: 65,
+    skorSekarang: 70,
+    risikoUtama: 'Operasional',
+    status: 'Layak Ditampilkan',
+    skorDetail: {
+      legalitas: 68,
+      modelBisnis: 72,
+      keuangan: 65,
+      operasional: 75
+    },
+    tahap: 2,
+    kontak: '+6287788990011',
+    lokasi: 'Bekasi, Jawa Barat',
+    usiaUsaha: '3 tahun',
+    karyawan: 15,
+    kategori: 'Makanan',
+    update: '2024-01-20'
+  },
+  {
+    id: 28,
+    nama: 'Pottery & Keramik',
+    statusUsaha: 'Berjalan',
+    omzet: '10-25 jt/bulan',
+    skorAwal: 58,
+    skorSekarang: 64,
+    risikoUtama: 'Produksi',
+    status: 'Perlu Perbaikan',
+    skorDetail: {
+      legalitas: 62,
+      modelBisnis: 65,
+      keuangan: 60,
+      operasional: 69
+    },
+    tahap: 2,
+    kontak: '+6288899001122',
+    lokasi: 'Purwakarta, Jawa Barat',
+    usiaUsaha: '4 tahun',
+    karyawan: 8,
+    kategori: 'Kerajinan',
+    update: '2024-01-18'
+  },
+  {
+    id: 29,
+    nama: 'Roti & Bakery',
+    statusUsaha: 'Berjalan',
+    omzet: '50-100 jt/bulan',
+    skorAwal: 72,
+    skorSekarang: 76,
+    risikoUtama: 'Bahan Baku',
+    status: 'Layak Ditampilkan',
+    skorDetail: {
+      legalitas: 75,
+      modelBisnis: 78,
+      keuangan: 72,
+      operasional: 79
+    },
+    tahap: 3,
+    kontak: '+6289900112233',
+    lokasi: 'Semarang, Jawa Tengah',
+    usiaUsaha: '8 tahun',
+    karyawan: 30,
+    kategori: 'Makanan',
+    update: '2024-01-22'
+  },
+  {
+    id: 30,
+    nama: 'Jasa Fotografi',
+    statusUsaha: 'Berjalan',
+    omzet: '5-10 jt/bulan',
+    skorAwal: 52,
+    skorSekarang: 57,
+    risikoUtama: 'Musiman',
+    status: 'Perlu Perbaikan',
+    skorDetail: {
+      legalitas: 55,
+      modelBisnis: 60,
+      keuangan: 52,
+      operasional: 61
+    },
+    tahap: 2,
+    kontak: '+6280011223344',
+    lokasi: 'Jakarta Barat',
+    usiaUsaha: '2 tahun',
+    karyawan: 4,
+    kategori: 'Jasa',
+    update: '2024-01-17'
   }
-]
-
-export const getUMKMById = (id) => {
-  return umkmDummy.find(umkm => umkm.id === id)
-}
-
-export const getUMKMForInvestor = () => {
-  return umkmDummy.filter(umkm => umkm.statusInvestor !== 'hidden')
-}
-
-export const updateUMKMSkor = (id, newData) => {
-  const index = umkmDummy.findIndex(umkm => umkm.id === id)
-  if (index !== -1) {
-    umkmDummy[index] = { ...umkmDummy[index], ...newData }
-    return umkmDummy[index]
-  }
-  return null
-}
+];

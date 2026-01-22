@@ -1,282 +1,108 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import { getUMKMForInvestor } from '../../data/umkmDummy'
+import React from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
 
-const CompareUMKM = () => {
-  const navigate = useNavigate()
-  const umkmList = getUMKMForInvestor()
-  
-  const getStatusColor = (skor) => {
-    if (skor >= 80) return '#10b981'
-    if (skor >= 60) return '#f59e0b'
-    return '#ef4444'
-  }
-  
-  const getStatusText = (skor) => {
-    if (skor >= 80) return 'Layak'
-    if (skor >= 60) return 'Siap dengan Catatan'
-    return 'Belum Siap'
-  }
+const CompareUMKM = ({ umkmList }) => {
+  const [selectedUMKM, setSelectedUMKM] = useState([0, 1]);
+
+  const comparisonData = selectedUMKM.map(index => umkmList[index]);
+
+  const chartData = [
+    { name: 'Legalitas', ...comparisonData.reduce((acc, umkm, i) => {
+      acc[`umkm${i+1}`] = umkm.skorDetail.legalitas;
+      return acc;
+    }, {}) },
+    { name: 'Model Bisnis', ...comparisonData.reduce((acc, umkm, i) => {
+      acc[`umkm${i+1}`] = umkm.skorDetail.modelBisnis;
+      return acc;
+    }, {}) },
+    { name: 'Keuangan', ...comparisonData.reduce((acc, umkm, i) => {
+      acc[`umkm${i+1}`] = umkm.skorDetail.keuangan;
+      return acc;
+    }, {}) },
+    { name: 'Operasional', ...comparisonData.reduce((acc, umkm, i) => {
+      acc[`umkm${i+1}`] = umkm.skorDetail.operasional;
+      return acc;
+    }, {}) }
+  ];
+
+  const colors = ['#4361ee', '#4cc9f0', '#7209b7', '#f72585'];
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <h2 style={styles.title}>Bandingkan UMKM</h2>
-        <p style={styles.subtitle}>
-          Analisis perbandingan UMKM yang tersedia untuk investasi
-        </p>
+    <div className="card border-0 shadow" data-aos="fade-up">
+      <div className="card-header bg-primary text-white">
+        <h4 className="mb-0">Bandingkan UMKM</h4>
       </div>
-      
-      <div style={styles.tableContainer}>
-        <table style={styles.table}>
-          <thead>
-            <tr>
-              <th style={styles.th}>Nama UMKM</th>
-              <th style={styles.th}>Skor</th>
-              <th style={styles.th}>Status</th>
-              <th style={styles.th}>Omzet Range</th>
-              <th style={styles.th}>Legalitas</th>
-              <th style={styles.th}>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {umkmList.map((umkm) => (
-              <tr key={umkm.id} style={styles.tr}>
-                <td style={styles.td}>
-                  <div style={styles.umkmInfo}>
-                    <div style={styles.umkmName}>{umkm.namaUsaha}</div>
-                    <div style={styles.umkmOwner}>{umkm.pemilik}</div>
-                  </div>
-                </td>
-                <td style={styles.td}>
-                  <div style={styles.skorCell}>
-                    <div style={styles.skorValue}>{umkm.skor.total}%</div>
-                    <div style={styles.progressBar}>
-                      <div 
-                        style={{ 
-                          ...styles.progressFill, 
-                          width: `${umkm.skor.total}%`,
-                          backgroundColor: getStatusColor(umkm.skor.total)
-                        }}
-                      ></div>
+      <div className="card-body">
+        <div className="row mb-4">
+          {comparisonData.map((umkm, index) => (
+            <div key={umkm.id} className="col-md-6">
+              <div className="card border-0 bg-light h-100">
+                <div className="card-body">
+                  <div className="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                      <h5 className="mb-1">{umkm.nama}</h5>
+                      <span className={`badge bg-${umkm.status === 'Layak Ditampilkan' ? 'success' : 'warning'}`}>
+                        {umkm.status}
+                      </span>
+                    </div>
+                    <div className="text-end">
+                      <div className="score-circle-sm">
+                        <h3 className="mb-0 fw-bold">{umkm.skorSekarang}%</h3>
+                      </div>
                     </div>
                   </div>
-                </td>
-                <td style={styles.td}>
-                  <div 
-                    style={{ 
-                      ...styles.statusBadge,
-                      backgroundColor: getStatusColor(umkm.skor.total) + '20',
-                      color: getStatusColor(umkm.skor.total)
-                    }}
-                  >
-                    {getStatusText(umkm.skor.total)}
+                  <div className="row">
+                    <div className="col-6">
+                      <small className="text-muted">Omzet</small>
+                      <p className="mb-1 fw-bold">{umkm.omzet}</p>
+                    </div>
+                    <div className="col-6">
+                      <small className="text-muted">Risiko Utama</small>
+                      <p className="mb-1 fw-bold">{umkm.risikoUtama}</p>
+                    </div>
                   </div>
-                </td>
-                <td style={styles.td}>{umkm.omzetRange}</td>
-                <td style={styles.td}>{umkm.legalitas}</td>
-                <td style={styles.td}>
-                  <div style={styles.actionButtons}>
-                    <button 
-                      style={styles.viewBtn}
-                      onClick={() => navigate(`/detail-umkm/${umkm.id}`)}
-                    >
-                      Lihat
-                    </button>
-                    <button 
-                      style={styles.compareBtn}
-                      onClick={() => {
-                        // Simpan ke localStorage untuk perbandingan
-                        const currentCompare = JSON.parse(localStorage.getItem('compareUMKM') || '[]')
-                        if (!currentCompare.includes(umkm.id)) {
-                          currentCompare.push(umkm.id)
-                          localStorage.setItem('compareUMKM', JSON.stringify(currentCompare))
-                          alert(`"${umkm.namaUsaha}" ditambahkan ke perbandingan`)
-                        }
-                      }}
-                    >
-                      Bandingkan
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      
-      <div style={styles.note}>
-        <p>
-          <strong>Catatan:</strong> Perbandingan membantu investor menilai UMKM berdasarkan parameter konsisten. 
-          Data diambil dari informasi yang diunggah UMKM.
-        </p>
-      </div>
-      
-      <div style={styles.footer}>
-        <button 
-          style={styles.primaryBtn}
-          onClick={() => {
-            const compareList = JSON.parse(localStorage.getItem('compareUMKM') || '[]')
-            if (compareList.length > 0) {
-              alert(`Sedang membandingkan ${compareList.length} UMKM`)
-              // Navigate ke halaman perbandingan detail
-            } else {
-              alert('Pilih UMKM untuk dibandingkan terlebih dahulu')
-            }
-          }}
-        >
-          Lihat Perbandingan ({JSON.parse(localStorage.getItem('compareUMKM') || '[]').length})
-        </button>
-        <button 
-          style={styles.secondaryBtn}
-          onClick={() => localStorage.setItem('compareUMKM', JSON.stringify([]))}
-        >
-          Reset Perbandingan
-        </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mb-4">
+          <h6 className="mb-3">Perbandingan Skor Detail:</h6>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              {comparisonData.map((_, index) => (
+                <Bar 
+                  key={`umkm${index+1}`} 
+                  dataKey={`umkm${index+1}`} 
+                  fill={colors[index % colors.length]}
+                  name={`UMKM ${index+1}`}
+                />
+              ))}
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className="alert alert-warning">
+          <div className="d-flex">
+            <i className="fas fa-balance-scale me-3 mt-1"></i>
+            <div>
+              <small className="fw-bold">Tips Perbandingan:</small>
+              <small className="d-block">
+                Bandingkan tidak hanya skor total, tetapi juga tren perbaikan, komitmen UMKM, dan chemistry bisnis.
+                Investasi yang baik membutuhkan kecocokan strategi dan nilai.
+              </small>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-const styles = {
-  container: {
-    backgroundColor: 'white',
-    borderRadius: '1rem',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    padding: '2rem',
-    marginBottom: '2rem'
-  },
-  header: {
-    marginBottom: '2rem'
-  },
-  title: {
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-    color: '#1f2937',
-    marginBottom: '0.5rem'
-  },
-  subtitle: {
-    color: '#6b7280'
-  },
-  tableContainer: {
-    overflowX: 'auto',
-    marginBottom: '2rem'
-  },
-  table: {
-    width: '100%',
-    borderCollapse: 'collapse'
-  },
-  th: {
-    padding: '1rem',
-    textAlign: 'left',
-    backgroundColor: '#f9fafb',
-    borderBottom: '2px solid #e5e7eb',
-    fontWeight: '600',
-    color: '#374151',
-    fontSize: '0.875rem'
-  },
-  tr: {
-    borderBottom: '1px solid #e5e7eb'
-  },
-  td: {
-    padding: '1rem',
-    verticalAlign: 'middle'
-  },
-  umkmInfo: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  umkmName: {
-    fontWeight: '600',
-    color: '#1f2937',
-    marginBottom: '0.25rem'
-  },
-  umkmOwner: {
-    fontSize: '0.875rem',
-    color: '#6b7280'
-  },
-  skorCell: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.75rem'
-  },
-  skorValue: {
-    fontWeight: '600',
-    color: '#1f2937',
-    minWidth: '45px'
-  },
-  progressBar: {
-    flex: 1,
-    height: '0.5rem',
-    backgroundColor: '#e5e7eb',
-    borderRadius: '0.25rem',
-    overflow: 'hidden'
-  },
-  progressFill: {
-    height: '100%',
-    transition: 'width 0.3s ease'
-  },
-  statusBadge: {
-    padding: '0.25rem 0.75rem',
-    borderRadius: '9999px',
-    fontSize: '0.75rem',
-    fontWeight: '600',
-    display: 'inline-block'
-  },
-  actionButtons: {
-    display: 'flex',
-    gap: '0.5rem'
-  },
-  viewBtn: {
-    backgroundColor: '#2563eb',
-    color: 'white',
-    padding: '0.5rem 1rem',
-    border: 'none',
-    borderRadius: '0.375rem',
-    cursor: 'pointer',
-    fontSize: '0.75rem',
-    fontWeight: '600'
-  },
-  compareBtn: {
-    backgroundColor: '#f3f4f6',
-    color: '#4b5563',
-    padding: '0.5rem 1rem',
-    border: '1px solid #d1d5db',
-    borderRadius: '0.375rem',
-    cursor: 'pointer',
-    fontSize: '0.75rem',
-    fontWeight: '600'
-  },
-  note: {
-    backgroundColor: '#eff6ff',
-    padding: '1rem',
-    borderRadius: '0.5rem',
-    marginBottom: '1.5rem',
-    fontSize: '0.875rem'
-  },
-  footer: {
-    display: 'flex',
-    gap: '1rem',
-    flexWrap: 'wrap'
-  },
-  primaryBtn: {
-    backgroundColor: '#2563eb',
-    color: 'white',
-    padding: '0.75rem 1.5rem',
-    border: 'none',
-    borderRadius: '0.5rem',
-    cursor: 'pointer',
-    fontWeight: '600'
-  },
-  secondaryBtn: {
-    backgroundColor: '#f3f4f6',
-    color: '#4b5563',
-    padding: '0.75rem 1.5rem',
-    border: '1px solid #d1d5db',
-    borderRadius: '0.5rem',
-    cursor: 'pointer',
-    fontWeight: '600'
-  }
-}
-
-export default CompareUMKM
+export default CompareUMKM;

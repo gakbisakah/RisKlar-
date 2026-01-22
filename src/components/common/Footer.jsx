@@ -1,130 +1,128 @@
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
-    <footer style={styles.footer}>
-      <div style={styles.container}>
-        <div style={styles.grid}>
-          <div style={styles.section}>
-            <h3 style={styles.heading}>Platform Penyaring UMKM</h3>
-            <p style={styles.description}>
-              Kami tidak menjanjikan keuntungan. Kami menyaring risiko dan membuka data secara jujur.
+    <footer className="footer bg-dark text-white">
+      <div className="container">
+        <div className="row py-5">
+          <div className="col-lg-4 mb-4">
+            <div className="d-flex align-items-center mb-3">
+           
+              <div>
+                <h4 className="fw-bold text-white mb-1">UMKMInvest</h4>
+                <small className="text-muted">Platform Transparan</small>
+              </div>
+            </div>
+            <p className="text-light opacity-75 small">
+              Menghubungkan UMKM dengan investor melalui sistem penilaian terbuka, edukasi risiko, dan kesepakatan mandiri.
             </p>
+            <div className="social-links d-flex gap-3 mt-4">
+              <a href="#" className="text-white opacity-75 hover-primary">
+                <i className="fab fa-twitter fs-5"></i>
+              </a>
+              <a href="#" className="text-white opacity-75 hover-primary">
+                <i className="fab fa-facebook fs-5"></i>
+              </a>
+              <a href="#" className="text-white opacity-75 hover-primary">
+                <i className="fab fa-linkedin fs-5"></i>
+              </a>
+              <a href="#" className="text-white opacity-75 hover-primary">
+                <i className="fab fa-instagram fs-5"></i>
+              </a>
+            </div>
           </div>
           
-          <div style={styles.section}>
-            <h4 style={styles.subheading}>Navigasi</h4>
-            <ul style={styles.list}>
-              <li style={styles.listItem}><a href="/" style={styles.link}>Tentang Platform</a></li>
-              <li style={styles.listItem}><a href="/penilaian" style={styles.link}>Prinsip Transparansi</a></li>
-              <li style={styles.listItem}><a href="/penilaian" style={styles.link}>Disclaimer Hukum</a></li>
-              <li style={styles.listItem}><a href="/penilaian" style={styles.link}>Kebijakan Privasi</a></li>
+          <div className="col-lg-2 col-md-4 mb-4">
+            <h5 className="text-white mb-4">Platform</h5>
+            <ul className="list-unstyled">
+              <li className="mb-2">
+                <Link to="/#tentang" className="text-light text-decoration-none opacity-75 hover-opacity-100">
+                  Tentang Sistem
+                </Link>
+              </li>
+              <li className="mb-2">
+                <Link to="/#cara-kerja" className="text-light text-decoration-none opacity-75 hover-opacity-100">
+                  Cara Kerja
+                </Link>
+              </li>
+              <li className="mb-2">
+                <Link to="/#roadmap" className="text-light text-decoration-none opacity-75 hover-opacity-100">
+                  Roadmap
+                </Link>
+              </li>
+              <li className="mb-2">
+                <a href="#kebijakan" className="text-light text-decoration-none opacity-75 hover-opacity-100">
+                  Kebijakan Risiko
+                </a>
+              </li>
             </ul>
           </div>
           
-          <div style={styles.section}>
-            <h4 style={styles.subheading}>Kontak</h4>
-            <ul style={styles.list}>
-              <li style={styles.listItem}>Email: info@umkminvest.demo</li>
-              <li style={styles.listItem}>Telepon: (021) 1234-5678</li>
-              <li style={styles.listItem}>Jam Operasional: Senin-Jumat, 09:00-17:00</li>
+          <div className="col-lg-3 col-md-4 mb-4">
+            <h5 className="text-white mb-4">Peran</h5>
+            <ul className="list-unstyled">
+              <li className="mb-2">
+                <a href="#umkm" className="text-light text-decoration-none opacity-75 hover-opacity-100">
+                  Untuk UMKM
+                </a>
+              </li>
+              <li className="mb-2">
+                <a href="#investor" className="text-light text-decoration-none opacity-75 hover-opacity-100">
+                  Untuk Investor
+                </a>
+              </li>
+             
+             
+            </ul>
+          </div>
+          
+          <div className="col-lg-3 col-md-4 mb-4">
+            <h5 className="text-white mb-4">Kontak & Legal</h5>
+            <ul className="list-unstyled">
+              <li className="mb-2">
+                <a href="#audit" className="text-light text-decoration-none opacity-75 hover-opacity-100">
+                  Audit & Transparansi
+                </a>
+              </li>
+              <li className="mb-2">
+                <a href="#batasan" className="text-light text-decoration-none opacity-75 hover-opacity-100">
+                  Batas Peran Platform
+                </a>
+              </li>
+              <li className="mb-2">
+                <a href="mailto:kontak@umkminvest.id" className="text-light text-decoration-none opacity-75 hover-opacity-100">
+                  <i className="fas fa-envelope me-2"></i>
+                  kontak@umkminvest.id
+                </a>
+              </li>
+              <li className="mb-2">
+                <a href="tel:+6281234567890" className="text-light text-decoration-none opacity-75 hover-opacity-100">
+                  <i className="fas fa-phone me-2"></i>
+                  +62 812 3456 7890
+                </a>
+              </li>
             </ul>
           </div>
         </div>
         
-        <div style={styles.disclaimer}>
-          <p style={styles.disclaimerText}>
-            <strong>Peringatan Penting:</strong> Platform tidak memverifikasi kebenaran hukum di luar data yang diunggah pengguna. 
-            Platform tidak melakukan penilaian profit, valuasi, atau rekomendasi investasi. 
-            Platform tidak terlibat dalam perjanjian hukum antara UMKM dan Investor.
-          </p>
-          <p style={styles.antiConflict}>
-            <strong>Anti Konflik Kepentingan:</strong> Setiap peran dalam platform dipisahkan untuk mencegah 
-            konflik kepentingan dalam penilaian dan pengambilan keputusan.
-          </p>
-        </div>
-        
-        <div style={styles.copyright}>
-          <p>© 2024 Platform Penyaring UMKM. Mode demonstrasi.</p>
+        <div className="border-top border-secondary border-opacity-25 pt-4">
+          <div className="row align-items-center">
+            <div className="col-md-6">
+              <p className="mb-0 text-muted small">
+                &copy; {new Date().getFullYear()} UMKMInvest Platform. Hak Cipta Dilindungi.
+              </p>
+            </div>
+            <div className="col-md-6 text-md-end">
+              <p className="mb-0 text-muted small">
+                Dibangun dengan transparansi dan kepercayaan.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-const styles = {
-  footer: {
-    backgroundColor: '#1f2937',
-    color: 'white',
-    padding: '3rem 0 1.5rem',
-    marginTop: 'auto'
-  },
-  container: {
-    maxWidth: '1200px',
-    margin: '0 auto',
-    padding: '0 1rem'
-  },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-    gap: '2rem',
-    marginBottom: '2rem'
-  },
-  section: {
-    marginBottom: '1.5rem'
-  },
-  heading: {
-    fontSize: '1.25rem',
-    fontWeight: 'bold',
-    marginBottom: '1rem',
-    color: '#f3f4f6'
-  },
-  subheading: {
-    fontSize: '1rem',
-    fontWeight: '600',
-    marginBottom: '1rem',
-    color: '#d1d5db'
-  },
-  description: {
-    color: '#9ca3af',
-    lineHeight: '1.6'
-  },
-  list: {
-    listStyle: 'none',
-    padding: 0,
-    margin: 0
-  },
-  listItem: {
-    marginBottom: '0.5rem'
-  },
-  link: {
-    color: '#9ca3af',
-    textDecoration: 'none',
-    transition: 'color 0.2s'
-  },
-  disclaimer: {
-    borderTop: '1px solid #374151',
-    paddingTop: '1.5rem',
-    marginBottom: '1.5rem'
-  },
-  disclaimerText: {
-    color: '#9ca3af',
-    fontSize: '0.875rem',
-    lineHeight: '1.6',
-    marginBottom: '1rem'
-  },
-  antiConflict: {
-    color: '#60a5fa',
-    fontSize: '0.875rem',
-    fontStyle: 'italic'
-  },
-  copyright: {
-    borderTop: '1px solid #374151',
-    paddingTop: '1.5rem',
-    textAlign: 'center',
-    color: '#9ca3af',
-    fontSize: '0.875rem'
-  }
-}
-
-export default Footer
+export default Footer;

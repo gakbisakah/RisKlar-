@@ -1,126 +1,92 @@
-import React from 'react'
+import React from 'react';
 
 const VisualAlur = () => {
   const steps = [
-    { id: 1, title: 'UMKM Daftar', desc: 'Mengisi data dasar usaha' },
-    { id: 2, title: 'Cek Kesiapan Bisnis', desc: 'Sistem menilai kesiapan investasi' },
-    { id: 3, title: 'Penilaian Terbuka', desc: 'Skor dan catatan tersedia' },
-    { id: 4, title: 'Edukasi Risiko', desc: 'UMKM memahami risiko bisnis' },
-    { id: 5, title: 'Investor Menilai', desc: 'Investor melihat data terbuka' },
-    { id: 6, title: 'Kesepakatan Mandiri', desc: 'Pihak sepakat di luar platform' }
-  ]
+    {
+      step: 1,
+      title: 'UMKM Daftar',
+      description: 'Mengisi data dasar usaha',
+      icon: 'fas fa-user-plus'
+    },
+    {
+      step: 2,
+      title: 'Self Check Awal',
+      description: '5 pertanyaan kunci',
+      icon: 'fas fa-clipboard-check'
+    },
+    {
+      step: 3,
+      title: 'Cek Kesiapan Bisnis',
+      description: 'Analisis fakta dasar',
+      icon: 'fas fa-chart-line'
+    },
+    {
+      step: 4,
+      title: 'Penilaian Terbuka',
+      description: 'Skor transparan',
+      icon: 'fas fa-balance-scale'
+    },
+    {
+      step: 5,
+      title: 'Edukasi Risiko',
+      description: 'Pemahaman bersama',
+      icon: 'fas fa-graduation-cap'
+    },
+    {
+      step: 6,
+      title: 'Investor Menilai',
+      description: 'Analisis mandiri',
+      icon: 'fas fa-search-dollar'
+    },
+    {
+      step: 7,
+      title: 'Kesepakatan Mandiri',
+      description: 'Di luar platform',
+      icon: 'fas fa-handshake'
+    }
+  ];
 
   return (
-    <section style={styles.section}>
-      <div style={styles.container}>
-        <h2 style={styles.title}>Alur Sistem Platform</h2>
-        <p style={styles.subtitle}>Transparansi dari awal hingga akhir</p>
-        
-        <div style={styles.timeline}>
-          {steps.map((step, index) => (
-            <div key={step.id} style={styles.stepContainer}>
-              <div style={styles.step}>
-                <div style={styles.stepNumber}>{step.id}</div>
-                <div style={styles.stepContent}>
-                  <h3 style={styles.stepTitle}>{step.title}</h3>
-                  <p style={styles.stepDesc}>{step.desc}</p>
+    <section id="cara-kerja" className="section-padding bg-light">
+      <div className="container">
+        <div className="text-center mb-5" data-aos="fade-up">
+          <h2 className="section-title">Visual Alur Sistem</h2>
+          <p className="text-muted">Proses transparan dari pendaftaran hingga kesepakatan</p>
+        </div>
+
+        <div className="timeline-wrapper" data-aos="fade-up">
+          <div className="row">
+            {steps.map((step, index) => (
+              <div key={step.step} className="col-md-4 col-lg-3 mb-4" data-aos="fade-up" data-aos-delay={index * 100}>
+                <div className="card h-100 border-0 shadow-sm hover-shadow transition-all">
+                  <div className="card-body text-center p-4">
+                    <div className="step-number mb-3">
+                      <div className="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center"
+                           style={{ width: '60px', height: '60px' }}>
+                        <i className={`${step.icon} fs-4`}></i>
+                      </div>
+                    </div>
+                    <h5 className="card-title mb-2">Step {step.step}</h5>
+                    <h6 className="text-primary mb-2">{step.title}</h6>
+                    <p className="card-text text-muted small">{step.description}</p>
+                  </div>
                 </div>
               </div>
-              {index < steps.length - 1 && (
-                <div style={styles.arrow}>→</div>
-              )}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-        
-        <div style={styles.note}>
-          <p><strong>Catatan:</strong> Setiap tahap harus diselesaikan sebelum melanjutkan ke tahap berikutnya.</p>
+
+        <div className="text-center mt-5" data-aos="fade-up">
+          <div className="alert alert-info border-0" style={{ background: 'rgba(67, 97, 238, 0.1)' }}>
+            <div className="d-flex align-items-center justify-content-center">
+              <i className="fas fa-info-circle text-primary fs-4 me-3"></i>
+              <p className="mb-0">Setiap tahap memiliki validasi sistem dan edukasi risiko yang wajib dipahami</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-const styles = {
-  section: {
-    padding: '4rem 1rem',
-    backgroundColor: '#f9fafb'
-  },
-  container: {
-    maxWidth: '1200px',
-    margin: '0 auto'
-  },
-  title: {
-    fontSize: '2.25rem',
-    fontWeight: 'bold',
-    color: '#1f2937',
-    textAlign: 'center',
-    marginBottom: '0.5rem'
-  },
-  subtitle: {
-    fontSize: '1.125rem',
-    color: '#6b7280',
-    textAlign: 'center',
-    marginBottom: '3rem'
-  },
-  timeline: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: '1rem'
-  },
-  stepContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    flex: '1',
-    minWidth: '150px'
-  },
-  step: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    textAlign: 'center',
-    flex: '1'
-  },
-  stepNumber: {
-    width: '3rem',
-    height: '3rem',
-    borderRadius: '50%',
-    backgroundColor: '#2563eb',
-    color: 'white',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontWeight: 'bold',
-    fontSize: '1.25rem',
-    marginBottom: '1rem'
-  },
-  stepContent: {
-    flex: '1'
-  },
-  stepTitle: {
-    fontSize: '1rem',
-    fontWeight: '600',
-    color: '#1f2937',
-    marginBottom: '0.5rem'
-  },
-  stepDesc: {
-    fontSize: '0.875rem',
-    color: '#6b7280'
-  },
-  arrow: {
-    fontSize: '1.5rem',
-    color: '#9ca3af',
-    padding: '0 0.5rem'
-  },
-  note: {
-    marginTop: '3rem',
-    padding: '1rem',
-    backgroundColor: '#e0f2fe',
-    borderRadius: '0.5rem',
-    textAlign: 'center'
-  }
-}
-
-export default VisualAlur
+export default VisualAlur;

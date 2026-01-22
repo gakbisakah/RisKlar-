@@ -1,26 +1,19 @@
-import { Navigate } from 'react-router-dom'
-import { akunDummy } from '../../data/akunDummy'
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { NAVIGATION } from '../../utils/constants';
 
-const ProtectedRoute = ({ children, role }) => {
-  const currentUser = akunDummy.getCurrentUser()
+const ProtectedRoute = ({ children, allowedRoles }) => {
+  const user = JSON.parse(localStorage.getItem('user'));
   
-  // Jika tidak login, redirect ke auth
-  if (!currentUser) {
-    return <Navigate to="/auth" replace />
+  if (!user) {
+    return <Navigate to={NAVIGATION.AUTH} replace />;
   }
   
-  // Jika ada requirement role tertentu
-  if (role) {
-    if (Array.isArray(role)) {
-      if (!role.includes(currentUser.role)) {
-        return <Navigate to="/" replace />
-      }
-    } else if (currentUser.role !== role) {
-      return <Navigate to="/" replace />
-    }
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to={NAVIGATION.LANDING} replace />;
   }
   
-  return children
-}
+  return children;
+};
 
-export default ProtectedRoute
+export default ProtectedRoute;

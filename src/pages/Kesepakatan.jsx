@@ -1,479 +1,295 @@
-import React, { useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { akunDummy } from '../data/akunDummy'
-import { getUMKMById } from '../data/umkmDummy'
-import { getKesepakatanByUMKMId, updateChecklistItem } from '../data/kesepakatanDummy'
-import CatatanSistem from '../components/shared/CatatanSistem'
-import StatusKerjaSama from '../components/shared/StatusKerjaSama'
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import StatusKerjaSama from '../components/shared/StatusKerjaSama';
 
 const Kesepakatan = () => {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const currentUser = akunDummy.getCurrentUser()
-  const umkmData = getUMKMById(id)
-  const kesepakatanData = getKesepakatanByUMKMId(id)
-  const [checklist, setChecklist] = useState(kesepakatanData?.checklist || [])
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [formData, setFormData] = useState({
+    pahamRisiko: false,
+    tanpaJaminan: false,
+    diLuarPlatform: false,
+    opsiBatalkan: false,
+    jumlahInvestasi: '',
+    periodeInvestasi: '',
+    bentukKerjaSama: '',
+    catatanTambahan: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  if (!umkmData) {
-    return (
-      <div style={styles.container}>
-        <div style={styles.error}>
-          <h2>Data UMKM tidak ditemukan</h2>
-          <button onClick={() => navigate(-1)} style={styles.button}>
-            Kembali
-          </button>
-        </div>
-      </div>
-    )
-  }
-
-  const handleChecklistChange = (checklistId) => {
-    const updatedChecklist = checklist.map(item => 
-      item.id === checklistId ? { ...item, status: !item.status } : item
-    )
-    setChecklist(updatedChecklist)
-    updateChecklistItem(id, checklistId, !checklist.find(item => item.id === checklistId)?.status)
-  }
-
-  const handleRecordAgreement = () => {
-    const completedCount = checklist.filter(item => item.status).length
-    const totalCount = checklist.length
-    
-    if (completedCount === totalCount) {
-      alert('Semua checklist telah diselesaikan! Status dapat diubah ke "Dalam Kerja Sama"')
-      navigate(`/status/${id}`)
-    } else {
-      alert(`Masih ada ${totalCount - completedCount} item yang belum diselesaikan`)
+  useEffect(() => {
+    // Check authentication
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user || user.role !== 'investor') {
+      navigate('/auth');
+      return;
     }
-  }
+
+    // Initialize AOS
+    if (window.AOS) {
+      window.AOS.init({
+        duration: 800,
+        once: true
+      });
+    }
+  }, [navigate]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    // Simulate API call
+    setTimeout(() => {
+      alert('Kesepakatan berhasil diajukan! Anda akan dihubungi oleh UMKM.');
+      navigate('/dashboard-investor');
+    }, 2000);
+  };
+
+  const handleCancel = () => {
+    if (window.confirm('Apakah Anda yakin ingin membatalkan minat investasi?')) {
+      navigate('/dashboard-investor');
+    }
+  };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <div>
-          <h1 style={styles.title}>Kesepakatan dengan {umkmData.namaUsaha}</h1>
-          <p style={styles.subtitle}>
-            Checklist dan dokumentasi kesepakatan investasi
+    <div className="container py-5">
+      {/* Header */}
+      <div className="row mb-5" data-aos="fade-up">
+        <div className="col-md-8">
+          <button className="btn btn-outline-primary mb-3" onClick={() => navigate('/dashboard-investor')}>
+            <i className="fas fa-arrow-left me-2"></i>
+            Kembali
+          </button>
+          <h1 className="display-6 fw-bold mb-2">Kesepakatan Mandiri</h1>
+          <p className="text-muted">
+            Ajukan minat investasi Anda dengan UMKM terpilih
           </p>
         </div>
-        <button 
-          onClick={() => navigate(`/detail-umkm/${id}`)}
-          style={styles.backButton}
-        >
-          ← Kembali ke Detail
-        </button>
+        <div className="col-md-4 text-md-end">
+          <div className="badge bg-warning px-3 py-2 fs-6">
+            Status: Draft
+          </div>
+        </div>
       </div>
 
-      <div style={styles.grid}>
-        <div style={styles.mainContent}>
-          <div style={styles.section}>
-            <h2 style={styles.sectionTitle}>Checklist Kesepakatan</h2>
-            <p style={styles.sectionDescription}>
-              Centang item yang telah disepakati oleh kedua belah pihak
-            </p>
-            
-            <div style={styles.checklistContainer}>
-              {checklist.map((item) => (
-                <div key={item.id} style={styles.checklistItem}>
-                  <label style={styles.checkboxLabel}>
-                    <input
-                      type="checkbox"
-                      checked={item.status}
-                      onChange={() => handleChecklistChange(item.id)}
-                      style={styles.checkbox}
-                    />
-                    <span style={styles.checkboxText}>{item.item}</span>
-                  </label>
-                  <div style={styles.checkboxStatus}>
-                    {item.status ? '✅ Disepakati' : '⏳ Menunggu'}
+      <div className="row">
+        {/* Left Column - Form */}
+        <div className="col-lg-8">
+          <div className="card border-0 shadow mb-4" data-aos="fade-up">
+            <div className="card-header bg-primary text-white">
+              <h4 className="mb-0">Checklist Persetujuan (Wajib)</h4>
+            </div>
+            <div className="card-body">
+              <form onSubmit={handleSubmit}>
+                <div className="mb-4">
+                  <h6 className="mb-3">Persetujuan Dasar</h6>
+                  <div className="border rounded p-3">
+                    <div className="form-check mb-3">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="pahamRisiko"
+                        checked={formData.pahamRisiko}
+                        onChange={(e) => setFormData({...formData, pahamRisiko: e.target.checked})}
+                        required
+                      />
+                      <label className="form-check-label" htmlFor="pahamRisiko">
+                        <strong>Saya memahami semua risiko investasi UMKM</strong> - termasuk risiko kehilangan seluruh dana investasi, kesulitan exit strategy, dan ketidakpastian return.
+                      </label>
+                    </div>
+                    <div className="form-check mb-3">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="tanpaJaminan"
+                        checked={formData.tanpaJaminan}
+                        onChange={(e) => setFormData({...formData, tanpaJaminan: e.target.checked})}
+                        required
+                      />
+                      <label className="form-check-label" htmlFor="tanpaJaminan">
+                        <strong>Saya memahami bahwa TIDAK ADA jaminan dari platform</strong> - platform hanya menyediakan informasi, tidak memberikan jaminan keamanan, return, atau keberhasilan investasi.
+                      </label>
+                    </div>
+                    <div className="form-check mb-3">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="diLuarPlatform"
+                        checked={formData.diLuarPlatform}
+                        onChange={(e) => setFormData({...formData, diLuarPlatform: e.target.checked})}
+                        required
+                      />
+                      <label className="form-check-label" htmlFor="diLuarPlatform">
+                        <strong>Saya memahami bahwa kesepakatan terjadi DI LUAR platform</strong> - semua negosiasi, kontrak, dan implementasi terjadi langsung antara saya dan UMKM.
+                      </label>
+                    </div>
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="opsiBatalkan"
+                        checked={formData.opsiBatalkan}
+                        onChange={(e) => setFormData({...formData, opsiBatalkan: e.target.checked})}
+                      />
+                      <label className="form-check-label" htmlFor="opsiBatalkan">
+                        <strong>Saya ingin menyimpan opsi untuk membatalkan minat investasi kapan saja</strong> - sebelum adanya komitmen formal.
+                      </label>
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
 
-            <div style={styles.progress}>
-              <div style={styles.progressHeader}>
-                <span>Progress Checklist</span>
-                <span>
-                  {checklist.filter(item => item.status).length} / {checklist.length}
-                </span>
-              </div>
-              <div style={styles.progressBar}>
-                <div 
-                  style={{ 
-                    ...styles.progressFill, 
-                    width: `${(checklist.filter(item => item.status).length / checklist.length) * 100}%` 
-                  }}
-                ></div>
-              </div>
+                <div className="mb-4">
+                  <h6 className="mb-3">Detail Minat Investasi (Opsional)</h6>
+                  <div className="row g-3">
+                    <div className="col-md-6">
+                      <label className="form-label">Jumlah Investasi (Rp)</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Contoh: 100.000.000"
+                        value={formData.jumlahInvestasi}
+                        onChange={(e) => setFormData({...formData, jumlahInvestasi: e.target.value})}
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <label className="form-label">Periode Investasi</label>
+                      <select
+                        className="form-select"
+                        value={formData.periodeInvestasi}
+                        onChange={(e) => setFormData({...formData, periodeInvestasi: e.target.value})}
+                      >
+                        <option value="">Pilih Periode</option>
+                        <option value="1-2 tahun">1-2 tahun</option>
+                        <option value="3-5 tahun">3-5 tahun</option>
+                        <option value=">5 tahun">&gt; 5 tahun</option>
+                        <option value="open">Terbuka</option>
+                      </select>
+                    </div>
+                    <div className="col-12">
+                      <label className="form-label">Bentuk Kerja Sama</label>
+                      <select
+                        className="form-select"
+                        value={formData.bentukKerjaSama}
+                        onChange={(e) => setFormData({...formData, bentukKerjaSama: e.target.value})}
+                      >
+                        <option value="">Pilih Bentuk</option>
+                        <option value="equity">Equity (Saham)</option>
+                        <option value="debt">Pinjaman</option>
+                        <option value="hybrid">Hibrid (Debt + Equity)</option>
+                        <option value="revenue-sharing">Revenue Sharing</option>
+                        <option value="other">Lainnya</option>
+                      </select>
+                    </div>
+                    <div className="col-12">
+                      <label className="form-label">Catatan Tambahan untuk UMKM</label>
+                      <textarea
+                        className="form-control"
+                        rows="3"
+                        placeholder="Jelaskan ekspektasi, syarat khusus, atau hal lain yang perlu diketahui UMKM..."
+                        value={formData.catatanTambahan}
+                        onChange={(e) => setFormData({...formData, catatanTambahan: e.target.value})}
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="alert alert-danger">
+                  <div className="d-flex">
+                    <i className="fas fa-exclamation-triangle me-3 mt-1"></i>
+                    <div>
+                      <small>
+                        <strong>PERINGATAN AKHIR:</strong> Dengan mengirimkan minat investasi ini, Anda mengkonfirmasi bahwa semua keputusan investasi adalah tanggung jawab Anda sepenuhnya. Platform tidak bertanggung jawab atas keputusan, kerugian, atau masalah yang timbul dari kesepakatan ini.
+                      </small>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="d-flex justify-content-between mt-4">
+                  <button
+                    type="button"
+                    className="btn btn-outline-danger"
+                    onClick={handleCancel}
+                  >
+                    <i className="fas fa-ban me-2"></i>
+                    Batalkan Minat
+                  </button>
+                  <div>
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary me-2"
+                      onClick={() => navigate('/dashboard-investor')}
+                    >
+                      Simpan Draft
+                    </button>
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      disabled={isSubmitting || !formData.pahamRisiko || !formData.tanpaJaminan || !formData.diLuarPlatform}
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <span className="spinner-border spinner-border-sm me-2"></span>
+                          Mengirim...
+                        </>
+                      ) : (
+                        <>
+                          <i className="fas fa-paper-plane me-2"></i>
+                          Ajukan Minat Investasi
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
+        </div>
 
-          {kesepakatanData?.dokumen && (
-            <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>Dokumen Kesepakatan</h2>
-              <div style={styles.documents}>
-                {kesepakatanData.dokumen.map((doc, index) => (
-                  <div key={index} style={styles.documentItem}>
-                    <div style={styles.documentIcon}>📄</div>
-                    <div style={styles.documentInfo}>
-                      <div style={styles.documentName}>{doc.nama}</div>
-                      <div style={styles.documentStatus}>{doc.status}</div>
+        {/* Right Column - Status & Info */}
+        <div className="col-lg-4">
+          {/* Status Info */}
+          <div className="mb-4" data-aos="fade-up">
+            <StatusKerjaSama />
+          </div>
+
+          {/* Important Info */}
+          <div className="card border-0 shadow" data-aos="fade-up">
+            <div className="card-header bg-info text-white">
+              <h5 className="mb-0">
+                <i className="fas fa-info-circle me-2"></i>
+                Proses Selanjutnya
+              </h5>
+            </div>
+            <div className="card-body">
+              <div className="timeline">
+                {[
+                  { step: 1, text: 'UMKM menerima notifikasi minat Anda' },
+                  { step: 2, text: 'UMKM akan menghubungi Anda via WhatsApp' },
+                  { step: 3, text: 'Diskusi dan negosiasi langsung' },
+                  { step: 4, text: 'Pembuatan kontrak oleh pihak UMKM' },
+                  { step: 5, text: 'Review kontrak oleh Anda' },
+                  { step: 6, text: 'Penandatanganan kontrak' },
+                  { step: 7, text: 'Transfer dana investasi' }
+                ].map((item) => (
+                  <div key={item.step} className="timeline-item">
+                    <div className="d-flex">
+                      <div className="rounded-circle bg-info text-white d-flex align-items-center justify-content-center"
+                           style={{ width: '30px', height: '30px', minWidth: '30px' }}>
+                        {item.step}
+                      </div>
+                      <div className="ms-3">
+                        <p className="mb-0 small">{item.text}</p>
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-          )}
-
-          {kesepakatanData?.catatan && (
-            <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>Catatan Negosiasi</h2>
-              <div style={styles.notes}>
-                <p style={styles.noteText}>{kesepakatanData.catatan}</p>
-              </div>
-            </div>
-          )}
-
-          <CatatanSistem 
-            catatan={[
-              'Checklist ini untuk memandu proses negosiasi',
-              'Platform tidak menyediakan template dokumen hukum',
-              'Semua dokumen hukum dibuat di luar platform',
-              'Platform hanya mencatat status kesepakatan'
-            ]}
-            type="warning"
-          />
+          </div>
         </div>
-
-        <div style={styles.sidebar}>
-          <div style={styles.sidebarCard}>
-            <h3 style={styles.sidebarTitle}>Status Kesepakatan</h3>
-            <div style={styles.statusInfo}>
-              <div style={styles.statusItem}>
-                <span style={styles.statusLabel}>Status:</span>
-                <span style={styles.statusValue}>{kesepakatanData?.status || 'Dalam Negosiasi'}</span>
-              </div>
-              <div style={styles.statusItem}>
-                <span style={styles.statusLabel}>Tanggal Mulai:</span>
-                <span style={styles.statusValue}>{kesepakatanData?.tanggalMulai || '2024-01-20'}</span>
-              </div>
-              <div style={styles.statusItem}>
-                <span style={styles.statusLabel}>Pihak Terlibat:</span>
-                <span style={styles.statusValue}>{umkmData.namaUsaha} & Investor</span>
-              </div>
-            </div>
-          </div>
-
-          <div style={styles.sidebarCard}>
-            <h3 style={styles.sidebarTitle}>Aksi</h3>
-            <div style={styles.actionButtons}>
-              <button 
-                style={styles.primaryAction}
-                onClick={handleRecordAgreement}
-              >
-                📝 Catat Kesepakatan
-              </button>
-              <button 
-                style={styles.secondaryAction}
-                onClick={() => navigate(`/diskusi/${id}`)}
-              >
-                💬 Lanjutkan Diskusi
-              </button>
-              <button 
-                style={styles.secondaryAction}
-                onClick={() => navigate(`/status/${id}`)}
-              >
-                📊 Lihat Status
-              </button>
-            </div>
-          </div>
-
-          <div style={styles.sidebarCard}>
-            <h3 style={styles.sidebarTitle}>Catatan Platform</h3>
-            <p style={styles.platformNote}>
-              {kesepakatanData?.platformCatatan || 'Platform hanya mencatat proses, bukan menilai hasil kerja sama.'}
-            </p>
-          </div>
-
-          <StatusKerjaSama 
-            statusData={{ status: 'Dalam Negosiasi', warna: 'warning' }}
-            umkmId={id}
-          />
-        </div>
-      </div>
-
-      <div style={styles.note}>
-        <p>
-          <strong>Mode Demonstrasi:</strong> Checklist ini adalah simulasi. 
-          Perubahan status bersifat sementara untuk demo.
-        </p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-const styles = {
-  container: {
-    maxWidth: '1400px',
-    margin: '0 auto',
-    padding: '2rem 1rem'
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: '2rem',
-    flexWrap: 'wrap',
-    gap: '1rem'
-  },
-  title: {
-    fontSize: '2.5rem',
-    fontWeight: 'bold',
-    color: '#1f2937',
-    marginBottom: '0.5rem'
-  },
-  subtitle: {
-    color: '#6b7280',
-    fontSize: '1.125rem'
-  },
-  backButton: {
-    backgroundColor: '#f3f4f6',
-    color: '#4b5563',
-    padding: '0.75rem 1.5rem',
-    border: '1px solid #d1d5db',
-    borderRadius: '0.5rem',
-    cursor: 'pointer',
-    fontWeight: '600'
-  },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: '2fr 1fr',
-    gap: '2rem',
-    marginBottom: '2rem'
-  },
-  mainContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '2rem'
-  },
-  sidebar: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1.5rem'
-  },
-  section: {
-    backgroundColor: 'white',
-    borderRadius: '1rem',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    padding: '1.5rem'
-  },
-  sectionTitle: {
-    fontSize: '1.5rem',
-    fontWeight: '600',
-    color: '#1f2937',
-    marginBottom: '0.5rem'
-  },
-  sectionDescription: {
-    color: '#6b7280',
-    marginBottom: '1.5rem',
-    fontSize: '0.875rem'
-  },
-  checklistContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.75rem',
-    marginBottom: '2rem'
-  },
-  checklistItem: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '1rem',
-    backgroundColor: '#f9fafb',
-    borderRadius: '0.75rem',
-    borderLeft: '4px solid #3b82f6'
-  },
-  checkboxLabel: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '1rem',
-    cursor: 'pointer',
-    flex: 1
-  },
-  checkbox: {
-    width: '1.25rem',
-    height: '1.25rem'
-  },
-  checkboxText: {
-    fontSize: '0.875rem',
-    fontWeight: '500',
-    color: '#1f2937'
-  },
-  checkboxStatus: {
-    fontSize: '0.75rem',
-    fontWeight: '600',
-    color: '#6b7280',
-    minWidth: '100px',
-    textAlign: 'right'
-  },
-  progress: {
-    backgroundColor: '#f0f9ff',
-    padding: '1rem',
-    borderRadius: '0.75rem'
-  },
-  progressHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: '0.5rem',
-    fontSize: '0.875rem',
-    color: '#1e40af'
-  },
-  progressBar: {
-    height: '0.75rem',
-    backgroundColor: '#dbeafe',
-    borderRadius: '0.375rem',
-    overflow: 'hidden'
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: '#3b82f6',
-    transition: 'width 0.3s ease'
-  },
-  documents: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem'
-  },
-  documentItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '1rem',
-    padding: '1rem',
-    backgroundColor: '#f9fafb',
-    borderRadius: '0.75rem'
-  },
-  documentIcon: {
-    fontSize: '1.5rem'
-  },
-  documentInfo: {
-    flex: 1
-  },
-  documentName: {
-    fontWeight: '600',
-    color: '#1f2937',
-    marginBottom: '0.25rem'
-  },
-  documentStatus: {
-    fontSize: '0.75rem',
-    color: '#6b7280'
-  },
-  notes: {
-    backgroundColor: '#fef3c7',
-    padding: '1rem',
-    borderRadius: '0.75rem'
-  },
-  noteText: {
-    margin: 0,
-    color: '#92400e',
-    lineHeight: '1.6'
-  },
-  sidebarCard: {
-    backgroundColor: 'white',
-    borderRadius: '0.75rem',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    padding: '1.5rem'
-  },
-  sidebarTitle: {
-    fontSize: '1.125rem',
-    fontWeight: '600',
-    color: '#1f2937',
-    marginBottom: '1rem',
-    paddingBottom: '0.5rem',
-    borderBottom: '2px solid #e5e7eb'
-  },
-  statusInfo: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.75rem'
-  },
-  statusItem: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '0.5rem 0',
-    borderBottom: '1px solid #f3f4f6'
-  },
-  statusLabel: {
-    color: '#6b7280',
-    fontSize: '0.875rem'
-  },
-  statusValue: {
-    fontWeight: '600',
-    color: '#1f2937',
-    fontSize: '0.875rem'
-  },
-  actionButtons: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.75rem'
-  },
-  primaryAction: {
-    backgroundColor: '#10b981',
-    color: 'white',
-    padding: '1rem',
-    border: 'none',
-    borderRadius: '0.5rem',
-    cursor: 'pointer',
-    fontWeight: '600',
-    fontSize: '1rem',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '0.5rem'
-  },
-  secondaryAction: {
-    backgroundColor: '#f3f4f6',
-    color: '#4b5563',
-    padding: '1rem',
-    border: '1px solid #d1d5db',
-    borderRadius: '0.5rem',
-    cursor: 'pointer',
-    fontWeight: '600',
-    fontSize: '1rem',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '0.5rem'
-  },
-  platformNote: {
-    backgroundColor: '#eff6ff',
-    padding: '1rem',
-    borderRadius: '0.5rem',
-    color: '#1e40af',
-    fontSize: '0.875rem',
-    lineHeight: '1.6'
-  },
-  note: {
-    backgroundColor: '#fef3c7',
-    padding: '1rem',
-    borderRadius: '0.5rem',
-    textAlign: 'center',
-    color: '#92400e'
-  },
-  error: {
-    textAlign: 'center',
-    padding: '4rem 1rem'
-  },
-  button: {
-    backgroundColor: '#2563eb',
-    color: 'white',
-    padding: '0.75rem 1.5rem',
-    border: 'none',
-    borderRadius: '0.5rem',
-    cursor: 'pointer',
-    fontWeight: '600',
-    marginTop: '1rem'
-  }
-}
-
-export default Kesepakatan
+export default Kesepakatan;

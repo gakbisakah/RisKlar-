@@ -1,193 +1,139 @@
-import React from 'react'
+import React from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 const ContohOutput = () => {
+  const scoreData = [
+    { name: 'Legalitas', value: 65, color: '#4361ee' },
+    { name: 'Model Bisnis', value: 78, color: '#4cc9f0' },
+    { name: 'Keuangan', value: 70, color: '#7209b7' },
+    { name: 'Operasional', value: 75, color: '#f72585' },
+  ];
+
+  const dummyStats = [
+    { label: 'UMKM Masuk Sistem', value: '120', icon: 'fas fa-store', color: 'primary' },
+    { label: 'UMKM Layak Ditampilkan', value: '34', icon: 'fas fa-chart-line', color: 'success' },
+    { label: 'Investor Aktif', value: '18', icon: 'fas fa-users', color: 'info' },
+   
+  ];
+
   return (
-    <section style={styles.section}>
-      <div style={styles.container}>
-        <h2 style={styles.title}>Contoh Output Sistem</h2>
-        
-        <div style={styles.outputCard}>
-          <div style={styles.outputHeader}>
-            <div style={styles.statusBadge}>
-              <span style={styles.statusDot}></span>
-              Status: 🟡 Siap dengan Catatan
+    <section className="section-padding bg-light">
+      <div className="container">
+        <div className="text-center mb-5" data-aos="fade-up">
+          <h2 className="section-title">Contoh Output Sistem</h2>
+          <p className="text-muted">Lihat bagaimana data ditampilkan secara transparan</p>
+        </div>
+
+        <div className="row g-4">
+          <div className="col-lg-6" data-aos="fade-right">
+            <div className="card h-100 border-0 shadow">
+              <div className="card-header bg-white border-0 py-3">
+                <h4 className="mb-0">Skor Detail UMKM Contoh</h4>
+              </div>
+              <div className="card-body">
+                <div className="mb-4">
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h5 className="mb-0">Kopi Lereng Arjuna</h5>
+                    <span className="badge bg-success">Layak Ditampilkan</span>
+                  </div>
+                  <div className="text-center mb-4">
+                    <div className="score-circle mx-auto">
+                      <div className="text-center">
+                        <h2 className="display-4 fw-bold mb-0">72%</h2>
+                        <small className="text-muted">Skor Total</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <h6 className="mb-3">Rincian Skor:</h6>
+                  <ResponsiveContainer width="100%" height={200}>
+                    <BarChart data={scoreData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip />
+                      <Bar dataKey="value">
+                        {scoreData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+
+                <div className="alert alert-warning border-0">
+                  <div className="d-flex">
+                    <i className="fas fa-exclamation-triangle text-warning me-3 fs-4"></i>
+                    <div>
+                      <h6 className="mb-1">Risiko Utama: Operasional</h6>
+                      <p className="mb-0 small">Perlu perbaikan SOP dan dokumentasi proses</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div style={styles.skor}>Skor Sistem: 68%</div>
           </div>
-          
-          <div style={styles.outputContent}>
-            <h3 style={styles.catatanTitle}>Catatan Utama:</h3>
-            <ul style={styles.catatanList}>
-              <li style={styles.catatanItem}>Arus kas belum stabil</li>
-              <li style={styles.catatanItem}>Risiko operasional masih tinggi</li>
-              <li style={styles.catatanItem}>Perlu bukti konsistensi omzet 6 bulan terakhir</li>
-              <li style={styles.catatanItem}>Legalitas dasar sudah memadai</li>
-            </ul>
-            
-            <div style={styles.subSkor}>
-              <div style={styles.subSkorItem}>
-                <span style={styles.subSkorLabel}>Legalitas Dasar:</span>
-                <div style={styles.progressBar}>
-                  <div style={{...styles.progressFill, width: '80%'}}></div>
-                </div>
-                <span style={styles.subSkorValue}>80%</span>
+
+          <div className="col-lg-6" data-aos="fade-left">
+            <div className="card h-100 border-0 shadow">
+              <div className="card-header bg-white border-0 py-3">
+                <h4 className="mb-0">Statistik Publik (Dummy)</h4>
               </div>
-              
-              <div style={styles.subSkorItem}>
-                <span style={styles.subSkorLabel}>Kejelasan Usaha:</span>
-                <div style={styles.progressBar}>
-                  <div style={{...styles.progressFill, width: '75%'}}></div>
+              <div className="card-body">
+                <div className="row g-3">
+                  {dummyStats.map((stat, index) => (
+                    <div key={index} className="col-md-6">
+                      <div className="card border-0 h-100" style={{ 
+                        background: `linear-gradient(135deg, var(--bs-${stat.color}) 0%, var(--bs-${stat.color}-dark) 100%)` 
+                      }}>
+                        <div className="card-body text-white p-4">
+                          <div className="d-flex align-items-center">
+                            <div className="rounded-circle bg-white bg-opacity-20 p-3 me-3">
+                              <i className={`${stat.icon} fs-3`}></i>
+                            </div>
+                            <div>
+                              <h2 className="display-6 fw-bold mb-1">{stat.value}</h2>
+                              <p className="mb-0 opacity-90">{stat.label}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <span style={styles.subSkorValue}>75%</span>
-              </div>
-              
-              <div style={styles.subSkorItem}>
-                <span style={styles.subSkorLabel}>Realistis Keuangan:</span>
-                <div style={styles.progressBar}>
-                  <div style={{...styles.progressFill, width: '60%'}}></div>
+
+                <div className="mt-4">
+                  <h6 className="mb-3">Roadmap Singkat:</h6>
+                  <div className="timeline">
+                    {[
+                      { phase: 'Fase Validasi', output: 'UMKM memahami skor & risiko awal' },
+                      { phase: 'Fase Edukasi', output: 'Skor meningkat melalui perbaikan terarah' },
+                      { phase: 'Fase Kolaborasi', output: 'UMKM terhubung investor secara mandiri' }
+                    ].map((item, index) => (
+                      <div key={index} className="timeline-item">
+                        <div className="d-flex align-items-start mb-3">
+                          <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                               style={{ width: '40px', height: '40px', minWidth: '40px' }}>
+                            {index + 1}
+                          </div>
+                          <div className="ms-3">
+                            <h6 className="mb-1">{item.phase}</h6>
+                            <p className="text-muted mb-0 small">{item.output}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <span style={styles.subSkorValue}>60%</span>
-              </div>
-              
-              <div style={styles.subSkorItem}>
-                <span style={styles.subSkorLabel}>Risiko Operasional:</span>
-                <div style={styles.progressBar}>
-                  <div style={{...styles.progressFill, width: '65%'}}></div>
-                </div>
-                <span style={styles.subSkorValue}>65%</span>
               </div>
             </div>
-          </div>
-          
-          <div style={styles.outputFooter}>
-            <p style={styles.disclaimer}>
-              📌 <strong>Contoh ini bersifat ilustratif, bukan rekomendasi investasi.</strong><br />
-              Skor dihitung dari jawaban UMKM, konsistensi data, dan indikator kesiapan investasi dasar.
-            </p>
           </div>
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-const styles = {
-  section: {
-    padding: '4rem 1rem',
-    backgroundColor: 'white'
-  },
-  container: {
-    maxWidth: '800px',
-    margin: '0 auto'
-  },
-  title: {
-    fontSize: '2.25rem',
-    fontWeight: 'bold',
-    color: '#1f2937',
-    textAlign: 'center',
-    marginBottom: '2rem'
-  },
-  outputCard: {
-    backgroundColor: '#f9fafb',
-    borderRadius: '0.75rem',
-    border: '2px solid #e5e7eb',
-    overflow: 'hidden'
-  },
-  outputHeader: {
-    backgroundColor: '#fef3c7',
-    padding: '1.5rem',
-    borderBottom: '2px solid #f59e0b',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: '1rem'
-  },
-  statusBadge: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    fontSize: '1.125rem',
-    fontWeight: '600',
-    color: '#92400e'
-  },
-  statusDot: {
-    width: '0.75rem',
-    height: '0.75rem',
-    backgroundColor: '#f59e0b',
-    borderRadius: '50%',
-    display: 'inline-block'
-  },
-  skor: {
-    fontSize: '1.125rem',
-    fontWeight: 'bold',
-    color: '#1f2937'
-  },
-  outputContent: {
-    padding: '2rem'
-  },
-  catatanTitle: {
-    fontSize: '1.25rem',
-    fontWeight: '600',
-    color: '#1f2937',
-    marginBottom: '1rem'
-  },
-  catatanList: {
-    listStyle: 'none',
-    padding: 0,
-    margin: '0 0 2rem 0'
-  },
-  catatanItem: {
-    padding: '0.5rem 0',
-    color: '#4b5563',
-    borderBottom: '1px solid #e5e7eb',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem'
-  },
-  subSkor: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem'
-  },
-  subSkorItem: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 2fr auto',
-    alignItems: 'center',
-    gap: '1rem'
-  },
-  subSkorLabel: {
-    fontWeight: '500',
-    color: '#4b5563'
-  },
-  progressBar: {
-    height: '0.75rem',
-    backgroundColor: '#e5e7eb',
-    borderRadius: '0.375rem',
-    overflow: 'hidden'
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: '#2563eb',
-    transition: 'width 0.3s ease'
-  },
-  subSkorValue: {
-    fontWeight: '600',
-    color: '#1f2937',
-    minWidth: '3rem',
-    textAlign: 'right'
-  },
-  outputFooter: {
-    backgroundColor: '#eff6ff',
-    padding: '1.5rem',
-    borderTop: '1px solid #dbeafe'
-  },
-  disclaimer: {
-    color: '#1e40af',
-    fontSize: '0.875rem',
-    lineHeight: '1.6',
-    margin: 0
-  }
-}
-
-export default ContohOutput
+export default ContohOutput;

@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { NAVIGATION } from '../../utils/constants';
 
-const RegisterUMKM = () => {
+const RegisterInvestor = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    namaUMKM: '',
-    namaPemilik: '',
+    namaLengkap: '',
     email: '',
     password: '',
     whatsapp: '',
@@ -19,45 +18,35 @@ const RegisterUMKM = () => {
     // Simpan data ke localStorage (dummy)
     const userData = {
       ...formData,
-      role: 'umkm',
-      selfCheck: 'Belum',
-      skorAwal: 0,
-      status: 'Baru Daftar',
+      role: 'investor',
+      statusEdukasi: 'Belum',
+      riwayatMinat: 0,
+      status: 'Aktif',
       timestamp: new Date().toISOString()
     };
     
     localStorage.setItem('user', JSON.stringify(userData));
-    localStorage.setItem('auth_token', 'dummy_token_umkm');
+    localStorage.setItem('auth_token', 'dummy_token_investor');
     
-    alert('Registrasi UMKM berhasil! Mengarahkan ke dashboard...');
-    navigate(NAVIGATION.DASHBOARD_UMKM);
+    alert('Registrasi Investor berhasil! Mengarahkan ke dashboard...');
+    navigate(NAVIGATION.DASHBOARD_INVESTOR);
   };
 
   return (
     <div className="card border-0 shadow" data-aos="fade-up">
-      <div className="card-header bg-primary text-white py-3">
-        <h4 className="mb-0">Form Registrasi UMKM</h4>
+      <div className="card-header bg-success text-white py-3">
+        <h4 className="mb-0">Form Registrasi Investor</h4>
       </div>
       <div className="card-body p-4">
         <form onSubmit={handleSubmit}>
           <div className="row g-3">
-            <div className="col-md-6">
-              <label className="form-label">Nama UMKM *</label>
+            <div className="col-12">
+              <label className="form-label">Nama Lengkap *</label>
               <input
                 type="text"
                 className="form-control"
-                value={formData.namaUMKM}
-                onChange={(e) => setFormData({...formData, namaUMKM: e.target.value})}
-                required
-              />
-            </div>
-            <div className="col-md-6">
-              <label className="form-label">Nama Pemilik *</label>
-              <input
-                type="text"
-                className="form-control"
-                value={formData.namaPemilik}
-                onChange={(e) => setFormData({...formData, namaPemilik: e.target.value})}
+                value={formData.namaLengkap}
+                onChange={(e) => setFormData({...formData, namaLengkap: e.target.value})}
                 required
               />
             </div>
@@ -94,7 +83,7 @@ const RegisterUMKM = () => {
                   required
                 />
               </div>
-              <small className="text-muted">Nomor ini akan digunakan untuk komunikasi investor</small>
+              <small className="text-muted">Nomor ini akan digunakan untuk komunikasi dengan UMKM</small>
             </div>
             <div className="col-12">
               <div className="form-check">
@@ -107,27 +96,28 @@ const RegisterUMKM = () => {
                   required
                 />
                 <label className="form-check-label" htmlFor="agreeRisk">
-                  Saya menyetujui bahwa saya telah membaca dan memahami semua risiko investasi UMKM.
-                  Platform ini hanya menyediakan informasi, tidak memberikan jaminan atau rekomendasi investasi.
+                  Saya menyetujui bahwa saya telah memahami semua risiko investasi UMKM.
+                  Saya bertanggung jawab penuh atas keputusan investasi saya dan platform tidak memberikan jaminan apapun.
                 </label>
               </div>
             </div>
           </div>
           
           <div className="mt-4">
-            <button type="submit" className="btn btn-primary btn-lg w-100">
-              Daftar sebagai UMKM
+            <button type="submit" className="btn btn-success btn-lg w-100">
+              Daftar sebagai Investor
             </button>
           </div>
         </form>
         
-        <div className="alert alert-warning mt-4">
+        <div className="alert alert-danger mt-4">
           <div className="d-flex">
-            <i className="fas fa-exclamation-triangle me-3 mt-1"></i>
+            <i className="fas fa-exclamation-circle me-3 mt-1"></i>
             <div>
-              <small className="fw-bold">Catatan Penting:</small>
+              <small className="fw-bold">Peringatan Risiko:</small>
               <small className="d-block">
-                Setelah registrasi, Anda wajib mengisi Self Check Awal sebelum mengakses fitur lengkap.
+                Investasi UMKM memiliki risiko tinggi. Anda bisa kehilangan seluruh dana yang diinvestasikan.
+                Platform hanya menyediakan informasi, bukan nasihat investasi.
               </small>
             </div>
           </div>
@@ -137,4 +127,4 @@ const RegisterUMKM = () => {
   );
 };
 
-export default RegisterUMKM;
+export default RegisterInvestor;

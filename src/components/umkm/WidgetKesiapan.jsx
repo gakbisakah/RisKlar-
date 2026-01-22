@@ -1,233 +1,108 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState } from 'react';
 
-const WidgetKesiapan = ({ umkmData }) => {
-  const navigate = useNavigate()
-  
-  const getStatusColor = (skor) => {
-    if (skor < 50) return '#ef4444'
-    if (skor < 70) return '#f59e0b'
-    return '#10b981'
-  }
-  
-  const getStatusText = (skor) => {
-    if (skor < 50) return 'Belum Direkomendasikan ke Investor'
-    if (skor < 70) return 'Siap dengan Catatan'
-    return 'Layak Dipresentasikan ke Investor'
-  }
-  
-  const getStatusIcon = (skor) => {
-    if (skor < 50) return '❌'
-    if (skor < 70) return '⚠️'
-    return '✅'
-  }
+const WidgetKesiapan = () => {
+  const [selfCheck, setSelfCheck] = useState({
+    q1: null,
+    q2: null,
+    q3: null,
+    q4: null,
+    q5: null
+  });
+
+  const questions = [
+    { id: 'q1', text: 'Apakah usaha sudah berjalan minimal 6 bulan?' },
+    { id: 'q2', text: 'Apakah memiliki pencatatan keuangan sederhana?' },
+    { id: 'q3', text: 'Apakah siap membagikan data usaha secara transparan?' },
+    { id: 'q4', text: 'Apakah memahami risiko investasi di UMKM?' },
+    { id: 'q5', text: 'Apakah bersedia diperiksa oleh mentor independen?' }
+  ];
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const yesCount = Object.values(selfCheck).filter(v => v === true).length;
+    
+    let status = '';
+    if (yesCount >= 4) {
+      status = 'Siap';
+    } else if (yesCount >= 2) {
+      status = 'Perlu Edukasi';
+    } else {
+      status = 'Belum Siap';
+    }
+    
+    localStorage.setItem('self_check_status', status);
+    alert(`Self Check selesai! Status: ${status}`);
+  };
 
   return (
-    <div style={styles.widget}>
-      <div style={styles.header}>
-        <h2 style={styles.title}>Kesiapan Investasi Anda</h2>
-        <div style={{ ...styles.statusBadge, backgroundColor: getStatusColor(umkmData.skor.total) + '20', color: getStatusColor(umkmData.skor.total) }}>
-          {getStatusIcon(umkmData.skor.total)} {getStatusText(umkmData.skor.total)}
-        </div>
+    <div className="card border-0 shadow mb-4" data-aos="fade-up">
+      <div className="card-header bg-primary text-white">
+        <h4 className="mb-0">Self Check Awal (Wajib)</h4>
       </div>
-      
-      <div style={styles.skorContainer}>
-        <div style={styles.skorCircle}>
-          <div style={styles.skorValue}>{umkmData.skor.total}%</div>
-          <div style={styles.skorLabel}>Skor Kesiapan</div>
-        </div>
-        
-        <div style={styles.skorDetails}>
-          <div style={styles.progressSection}>
-            <div style={styles.progressHeader}>
-              <span>Progress Kesiapan</span>
-              <span>{umkmData.skor.total}%</span>
-            </div>
-            <div style={styles.progressBar}>
-              <div 
-                style={{ 
-                  ...styles.progressFill, 
-                  width: `${umkmData.skor.total}%`,
-                  backgroundColor: getStatusColor(umkmData.skor.total)
-                }}
-              ></div>
-            </div>
-          </div>
-          
-          <div style={styles.masalahSection}>
-            <h4 style={styles.masalahTitle}>Masalah Utama:</h4>
-            <ul style={styles.masalahList}>
-              {umkmData.skor.masalahUtama.map((masalah, index) => (
-                <li key={index} style={styles.masalahItem}>
-                  ❌ {masalah}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-      
-      <div style={styles.explanation}>
-        <p style={styles.explanationText}>
-          <strong>Penjelasan:</strong> Skor dihitung dari jawaban UMKM, konsistensi data, 
-          dan indikator kesiapan investasi dasar (bukan prediksi profit).
+      <div className="card-body">
+        <p className="text-muted mb-4">
+          Jawab 5 pertanyaan ini untuk mengetahui kesiapan awal Anda. Hasil menentukan akses Anda ke sistem.
         </p>
-      </div>
-      
-      <div style={styles.actions}>
-        <button 
-          style={styles.actionBtn}
-          onClick={() => navigate('/upload-ide')}
-        >
-          Perbaiki Data Usaha
-        </button>
-        <button 
-          style={{...styles.actionBtn, ...styles.secondaryBtn}}
-          onClick={() => navigate('/penilaian')}
-        >
-          Lihat Detail Penilaian
-        </button>
+        
+        <form onSubmit={handleSubmit}>
+          {questions.map((q, index) => (
+            <div key={q.id} className="mb-4">
+              <p className="fw-bold mb-2">{index + 1}. {q.text}</p>
+              <div className="btn-group w-100" role="group">
+                <button
+                  type="button"
+                  className={`btn ${selfCheck[q.id] === true ? 'btn-success' : 'btn-outline-success'}`}
+                  onClick={() => setSelfCheck({...selfCheck, [q.id]: true})}
+                >
+                  Ya
+                </button>
+                <button
+                  type="button"
+                  className={`btn ${selfCheck[q.id] === false ? 'btn-danger' : 'btn-outline-danger'}`}
+                  onClick={() => setSelfCheck({...selfCheck, [q.id]: false})}
+                >
+                  Tidak
+                </button>
+              </div>
+            </div>
+          ))}
+          
+          <div className="mt-4">
+            <button type="submit" className="btn btn-primary btn-lg w-100">
+              Lihat Hasil Self Check
+            </button>
+          </div>
+        </form>
+        
+        <div className="alert alert-info mt-4">
+          <h6 className="mb-2">Hasil Self Check:</h6>
+          <div className="row text-center">
+            <div className="col-4">
+              <div className="rounded-circle bg-danger bg-opacity-10 text-danger p-3 d-inline-flex align-items-center justify-content-center mb-2">
+                <i className="fas fa-times fs-4"></i>
+              </div>
+              <p className="mb-0 small fw-bold">Belum Siap</p>
+              <small className="text-muted">Kebutuhan: Edukasi dasar</small>
+            </div>
+            <div className="col-4">
+              <div className="rounded-circle bg-warning bg-opacity-10 text-warning p-3 d-inline-flex align-items-center justify-content-center mb-2">
+                <i className="fas fa-exclamation fs-4"></i>
+              </div>
+              <p className="mb-0 small fw-bold">Perlu Edukasi</p>
+              <small className="text-muted">Kebutuhan: Peningkatan</small>
+            </div>
+            <div className="col-4">
+              <div className="rounded-circle bg-success bg-opacity-10 text-success p-3 d-inline-flex align-items-center justify-content-center mb-2">
+                <i className="fas fa-check fs-4"></i>
+              </div>
+              <p className="mb-0 small fw-bold">Siap</p>
+              <small className="text-muted">Kebutuhan: Review mentor</small>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-const styles = {
-  widget: {
-    backgroundColor: 'white',
-    borderRadius: '1rem',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    padding: '2rem',
-    marginBottom: '2rem'
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: '2rem',
-    flexWrap: 'wrap',
-    gap: '1rem'
-  },
-  title: {
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-    color: '#1f2937',
-    margin: 0
-  },
-  statusBadge: {
-    padding: '0.5rem 1rem',
-    borderRadius: '9999px',
-    fontSize: '0.875rem',
-    fontWeight: '600',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem'
-  },
-  skorContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '2rem',
-    marginBottom: '2rem'
-  },
-  skorCircle: {
-    width: '150px',
-    height: '150px',
-    borderRadius: '50%',
-    border: '10px solid #e5e7eb',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative'
-  },
-  skorValue: {
-    fontSize: '2.5rem',
-    fontWeight: 'bold',
-    color: '#1f2937'
-  },
-  skorLabel: {
-    fontSize: '0.875rem',
-    color: '#6b7280',
-    marginTop: '0.5rem'
-  },
-  skorDetails: {
-    width: '100%'
-  },
-  progressSection: {
-    marginBottom: '1.5rem'
-  },
-  progressHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: '0.5rem',
-    fontSize: '0.875rem',
-    color: '#4b5563'
-  },
-  progressBar: {
-    height: '0.75rem',
-    backgroundColor: '#e5e7eb',
-    borderRadius: '0.375rem',
-    overflow: 'hidden'
-  },
-  progressFill: {
-    height: '100%',
-    transition: 'width 0.3s ease'
-  },
-  masalahSection: {
-    backgroundColor: '#fef2f2',
-    padding: '1rem',
-    borderRadius: '0.5rem'
-  },
-  masalahTitle: {
-    fontSize: '1rem',
-    fontWeight: '600',
-    color: '#dc2626',
-    marginBottom: '0.75rem'
-  },
-  masalahList: {
-    listStyle: 'none',
-    padding: 0,
-    margin: 0
-  },
-  masalahItem: {
-    padding: '0.5rem 0',
-    color: '#4b5563',
-    borderBottom: '1px solid #fee2e2'
-  },
-  explanation: {
-    backgroundColor: '#eff6ff',
-    padding: '1rem',
-    borderRadius: '0.5rem',
-    marginBottom: '1.5rem'
-  },
-  explanationText: {
-    margin: 0,
-    color: '#1e40af',
-    fontSize: '0.875rem',
-    lineHeight: '1.6'
-  },
-  actions: {
-    display: 'flex',
-    gap: '1rem',
-    flexWrap: 'wrap'
-  },
-  actionBtn: {
-    backgroundColor: '#2563eb',
-    color: 'white',
-    padding: '0.75rem 1.5rem',
-    border: 'none',
-    borderRadius: '0.5rem',
-    cursor: 'pointer',
-    fontWeight: '600',
-    flex: '1',
-    minWidth: '200px'
-  },
-  secondaryBtn: {
-    backgroundColor: '#f3f4f6',
-    color: '#4b5563',
-    border: '1px solid #d1d5db'
-  }
-}
-
-export default WidgetKesiapan
+export default WidgetKesiapan;

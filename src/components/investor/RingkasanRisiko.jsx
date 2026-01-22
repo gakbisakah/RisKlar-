@@ -1,247 +1,144 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState } from 'react';
 
 const RingkasanRisiko = ({ umkmData }) => {
-  const navigate = useNavigate()
-  
-  const getRiskLevel = (skor) => {
-    if (skor >= 80) return { level: 'Rendah', color: '#10b981' }
-    if (skor >= 60) return { level: 'Sedang', color: '#f59e0b' }
-    return { level: 'Tinggi', color: '#ef4444' }
-  }
-  
-  const riskLevel = getRiskLevel(umkmData.skor.total)
+  const [understandRisk, setUnderstandRisk] = useState(false);
+  const [understandExit, setUnderstandExit] = useState(false);
+  const [understandNoGuarantee, setUnderstandNoGuarantee] = useState(false);
+
+  const risikoLevel = umkmData.skorSekarang < 50 ? 'Tinggi' : 
+                    umkmData.skorSekarang < 70 ? 'Sedang' : 'Rendah';
+
+  const risikoWarna = risikoLevel === 'Tinggi' ? 'danger' : 
+                     risikoLevel === 'Sedang' ? 'warning' : 'success';
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <h2 style={styles.title}>Ringkasan Risiko</h2>
-        <div style={{ ...styles.riskBadge, backgroundColor: riskLevel.color + '20', color: riskLevel.color }}>
-          Risiko {riskLevel.level}
-        </div>
+    <div className="card border-0 shadow" data-aos="fade-up">
+      <div className="card-header bg-danger text-white">
+        <h4 className="mb-0">Ringkasan Risiko</h4>
       </div>
-      
-      <div style={styles.content}>
-        <div style={styles.riskSection}>
-          <h3 style={styles.sectionTitle}>Identifikasi Risiko Utama</h3>
-          <ul style={styles.riskList}>
-            {umkmData.skor.masalahUtama.map((masalah, index) => (
-              <li key={index} style={styles.riskItem}>
-                ⚠️ {masalah}
-              </li>
-            ))}
-            {umkmData.catatanSistem.map((catatan, index) => (
-              <li key={`catatan-${index}`} style={styles.riskItem}>
-                📝 {catatan}
-              </li>
-            ))}
-          </ul>
-        </div>
-        
-        <div style={styles.infoSection}>
-          <h3 style={styles.sectionTitle}>Informasi Dasar</h3>
-          <div style={styles.infoGrid}>
-            <div style={styles.infoItem}>
-              <span style={styles.infoLabel}>Status Usaha:</span>
-              <span style={styles.infoValue}>{umkmData.statusUsaha}</span>
+      <div className="card-body">
+        <div className="row mb-4">
+          <div className="col-md-6">
+            <div className="card border-0 bg-light h-100">
+              <div className="card-body">
+                <h6 className="mb-3">Level Risiko</h6>
+                <div className="text-center">
+                  <div className={`rounded-circle bg-${risikoWarna} bg-opacity-10 text-${risikoWarna} p-4 d-inline-flex align-items-center justify-content-center mb-3`}>
+                    <i className={`fas fa-exclamation-triangle fs-1`}></i>
+                  </div>
+                  <h3 className={`text-${risikoWarna} fw-bold`}>{risikoLevel}</h3>
+                  <p className="text-muted small">Berdasarkan analisis sistem</p>
+                </div>
+              </div>
             </div>
-            <div style={styles.infoItem}>
-              <span style={styles.infoLabel}>Omzet Range:</span>
-              <span style={styles.infoValue}>{umkmData.omzetRange}</span>
-            </div>
-            <div style={styles.infoItem}>
-              <span style={styles.infoLabel}>Legalitas:</span>
-              <span style={styles.infoValue}>{umkmData.legalitas}</span>
-            </div>
-            <div style={styles.infoItem}>
-              <span style={styles.infoLabel}>Bergabung:</span>
-              <span style={styles.infoValue}>{umkmData.tanggalBergabung}</span>
+          </div>
+          <div className="col-md-6">
+            <div className="card border-0 bg-light h-100">
+              <div className="card-body">
+                <h6 className="mb-3">Faktor Risiko Utama</h6>
+                <ul className="list-unstyled mb-0">
+                  {umkmData.risikoUtama && (
+                    <li className="mb-2 d-flex align-items-start">
+                      <i className="fas fa-circle text-danger me-2 mt-1" style={{ fontSize: '8px' }}></i>
+                      <span>{umkmData.risikoUtama}</span>
+                    </li>
+                  )}
+                  <li className="mb-2 d-flex align-items-start">
+                    <i className="fas fa-circle text-warning me-2 mt-1" style={{ fontSize: '8px' }}></i>
+                    <span>Usaha skala kecil/mikro</span>
+                  </li>
+                  <li className="mb-2 d-flex align-items-start">
+                    <i className="fas fa-circle text-warning me-2 mt-1" style={{ fontSize: '8px' }}></i>
+                    <span>Ketergantungan pada pemilik</span>
+                  </li>
+                  <li className="mb-2 d-flex align-items-start">
+                    <i className="fas fa-circle text-info me-2 mt-1" style={{ fontSize: '8px' }}></i>
+                    <span>Fluktuasi pasar UMKM</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
-        
-        <div style={styles.riwayatSection}>
-          <h3 style={styles.sectionTitle}>Riwayat Perbaikan UMKM</h3>
-          <div style={styles.timeline}>
-            {umkmData.timelinePerbaikan.map((item, index) => (
-              <div key={index} style={styles.timelineItem}>
-                <div style={styles.timelineDate}>{item.date}</div>
-                <div style={styles.timelineContent}>
-                  <strong>{item.action}</strong>
-                  <p style={styles.timelineDesc}>{item.perubahan}</p>
+
+        <div className="mb-4">
+          <h6 className="mb-3">Yang TIDAK Dijanjikan Platform:</h6>
+          <div className="row g-2">
+            {[
+              'Keuntungan atau ROI tertentu',
+              'Pengembalian investasi',
+              'Keberhasilan bisnis',
+              'Rekomendasi investasi',
+              'Jaminan legalitas sempurna'
+            ].map((item, index) => (
+              <div key={index} className="col-md-6">
+                <div className="border rounded p-3">
+                  <div className="d-flex align-items-center">
+                    <i className="fas fa-times text-danger me-3"></i>
+                    <span className="small">{item}</span>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </div>
-      
-      <div style={styles.actions}>
-        <button 
-          style={styles.actionBtn}
-          onClick={() => navigate(`/detail-umkm/${umkmData.id}`)}
-        >
-          Lihat Detail Lengkap
-        </button>
-        <button 
-          style={{...styles.actionBtn, ...styles.secondaryBtn}}
-          onClick={() => navigate(`/diskusi/${umkmData.id}`)}
-        >
-          Mulai Diskusi
-        </button>
-      </div>
-      
-      <div style={styles.note}>
-        <p>
-          <strong>Catatan Platform:</strong> Penilaian risiko berdasarkan data yang diunggah UMKM. 
-          Investor bertanggung jawab penuh atas due diligence tambahan.
-        </p>
+
+        <div className="edu-checklist">
+          <h6 className="mb-3">Checklist Pemahaman Risiko (Wajib):</h6>
+          <div className="border rounded p-3">
+            <div className="form-check mb-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="understandRisk"
+                checked={understandRisk}
+                onChange={(e) => setUnderstandRisk(e.target.checked)}
+              />
+              <label className="form-check-label" htmlFor="understandRisk">
+                Saya memahami bahwa investasi UMKM memiliki risiko tinggi dan saya bisa kehilangan seluruh dana yang diinvestasikan
+              </label>
+            </div>
+            <div className="form-check mb-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="understandExit"
+                checked={understandExit}
+                onChange={(e) => setUnderstandExit(e.target.checked)}
+              />
+              <label className="form-check-label" htmlFor="understandExit">
+                Saya memahami bahwa exit strategy (cara keluar dari investasi) mungkin sulit dan memakan waktu lama
+              </label>
+            </div>
+            <div className="form-check mb-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="understandNoGuarantee"
+                checked={understandNoGuarantee}
+                onChange={(e) => setUnderstandNoGuarantee(e.target.checked)}
+              />
+              <label className="form-check-label" htmlFor="understandNoGuarantee">
+                Saya memahami bahwa platform TIDAK memberikan jaminan apapun dan semua keputusan investasi adalah tanggung jawab saya sepenuhnya
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div className="alert alert-info mt-4">
+          <div className="d-flex">
+            <i className="fas fa-info-circle me-3 mt-1"></i>
+            <div>
+              <small>
+                <span className="fw-bold">Disclaimer:</span> Analisis risiko ini berdasarkan data yang tersedia.
+                Anda disarankan melakukan due diligence tambahan sebelum mengambil keputusan investasi.
+              </small>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-const styles = {
-  container: {
-    backgroundColor: 'white',
-    borderRadius: '1rem',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    padding: '2rem',
-    marginBottom: '2rem'
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: '2rem',
-    flexWrap: 'wrap',
-    gap: '1rem'
-  },
-  title: {
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-    color: '#1f2937',
-    margin: 0
-  },
-  riskBadge: {
-    padding: '0.5rem 1.5rem',
-    borderRadius: '9999px',
-    fontSize: '0.875rem',
-    fontWeight: '600',
-    display: 'inline-block'
-  },
-  content: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '2rem'
-  },
-  sectionTitle: {
-    fontSize: '1.125rem',
-    fontWeight: '600',
-    color: '#1f2937',
-    marginBottom: '1rem',
-    paddingBottom: '0.5rem',
-    borderBottom: '2px solid #e5e7eb'
-  },
-  riskSection: {
-    backgroundColor: '#fef2f2',
-    padding: '1.5rem',
-    borderRadius: '0.75rem'
-  },
-  riskList: {
-    listStyle: 'none',
-    padding: 0,
-    margin: 0
-  },
-  riskItem: {
-    padding: '0.75rem 0',
-    borderBottom: '1px solid #fee2e2',
-    color: '#4b5563'
-  },
-  infoSection: {
-    backgroundColor: '#eff6ff',
-    padding: '1.5rem',
-    borderRadius: '0.75rem'
-  },
-  infoGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-    gap: '1rem'
-  },
-  infoItem: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  infoLabel: {
-    fontSize: '0.875rem',
-    color: '#6b7280',
-    marginBottom: '0.25rem'
-  },
-  infoValue: {
-    fontWeight: '600',
-    color: '#1f2937'
-  },
-  riwayatSection: {
-    backgroundColor: '#f0f9ff',
-    padding: '1.5rem',
-    borderRadius: '0.75rem'
-  },
-  timeline: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem'
-  },
-  timelineItem: {
-    display: 'flex',
-    gap: '1rem',
-    alignItems: 'flex-start'
-  },
-  timelineDate: {
-    backgroundColor: '#dbeafe',
-    color: '#1e40af',
-    padding: '0.25rem 0.75rem',
-    borderRadius: '0.375rem',
-    fontSize: '0.875rem',
-    fontWeight: '600',
-    minWidth: '100px'
-  },
-  timelineContent: {
-    flex: 1
-  },
-  timelineDesc: {
-    margin: '0.25rem 0 0 0',
-    color: '#6b7280',
-    fontSize: '0.875rem'
-  },
-  actions: {
-    display: 'flex',
-    gap: '1rem',
-    marginTop: '2rem',
-    flexWrap: 'wrap'
-  },
-  actionBtn: {
-    backgroundColor: '#2563eb',
-    color: 'white',
-    padding: '0.75rem 1.5rem',
-    border: 'none',
-    borderRadius: '0.5rem',
-    cursor: 'pointer',
-    fontWeight: '600',
-    flex: 1,
-    minWidth: '200px'
-  },
-  secondaryBtn: {
-    backgroundColor: '#f3f4f6',
-    color: '#4b5563',
-    border: '1px solid #d1d5db'
-  },
-  note: {
-    marginTop: '1.5rem',
-    padding: '1rem',
-    backgroundColor: '#f9fafb',
-    borderRadius: '0.5rem',
-    borderLeft: '4px solid #6b7280'
-  }
-}
-
-export default RingkasanRisiko
+export default RingkasanRisiko;

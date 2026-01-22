@@ -1,82 +1,41 @@
 export const akunDummy = {
-  currentUser: null,
-  
-  users: [
-    {
-      id: 'umkm-1',
-      role: 'UMKM',
-      name: 'UMKM A - Warung Kopi Nusantara',
-      email: 'umkm.a@demo.com',
-      status: 'Belum Siap',
-      skor: 45,
-      lastLogin: '2024-01-15'
-    },
-    {
-      id: 'umkm-2',
-      role: 'UMKM',
-      name: 'UMKM B - Batik Kreatif Indonesia',
-      email: 'umkm.b@demo.com',
-      status: 'Siap dengan Catatan',
-      skor: 68,
-      lastLogin: '2024-01-18'
-    },
-    {
-      id: 'umkm-3',
-      role: 'UMKM',
-      name: 'UMKM C - EcoPack Solution',
-      email: 'umkm.c@demo.com',
-      status: 'Layak Dipresentasikan',
-      skor: 82,
-      lastLogin: '2024-01-20'
-    },
-    {
-      id: 'investor-1',
-      role: 'INVESTOR',
-      name: 'Investor X',
-      email: 'investor@demo.com',
-      status: 'Aktif',
-      lastLogin: '2024-01-19'
-    },
-    {
-      id: 'mentor-1',
-      role: 'MENTOR',
-      name: 'Mentor Bisnis',
-      email: 'mentor@demo.com',
-      status: 'Tersedia',
-      lastLogin: '2024-01-17'
-    }
-  ],
-
-  login: function(email) {
-    const user = this.users.find(u => u.email === email)
-    if (user) {
-      this.currentUser = user
-      localStorage.setItem('currentUser', JSON.stringify(user))
-      return user
-    }
-    return null
+  umkm: {
+    email: 'umkm@demo.id',
+    password: 'demo123',
+    role: 'umkm',
+    nama: 'Kopi Lereng Arjuna',
+    pemilik: 'Budi Santoso',
+    whatsapp: '+6281234567890',
+    selfCheck: 'Perlu Edukasi',
+    skorAwal: 62,
+    status: 'Layak Ditampilkan',
+    tahap: 1
   },
-
-  logout: function() {
-    this.currentUser = null
-    localStorage.removeItem('currentUser')
+  investor: {
+    email: 'investor@demo.id',
+    password: 'demo123',
+    role: 'investor',
+    nama: 'Angel Investor',
+    whatsapp: '+6289876543210',
+    statusEdukasi: 'Sudah Paham',
+    riwayatMinat: 2,
+    status: 'Aktif'
   },
-
-  getCurrentUser: function() {
-    if (!this.currentUser) {
-      const stored = localStorage.getItem('currentUser')
-      if (stored) {
-        this.currentUser = JSON.parse(stored)
-      }
-    }
-    return this.currentUser
+  mentor: {
+    email: 'mentor@demo.id',
+    password: 'demo123',
+    role: 'mentor',
+    nama: 'Dr. Finance Expert',
+    whatsapp: '+6281122334455',
+    bidang: 'Keuangan & Bisnis',
+    umkmDireview: 3,
+    reviewAktif: 1
   },
-
-  getUsersByRole: function(role) {
-    return this.users.filter(user => user.role === role)
-  },
-
-  getUserById: function(id) {
-    return this.users.find(user => user.id === id)
+  admin: {
+    email: 'admin@demo.id',
+    password: 'admin123',
+    role: 'admin',
+    nama: 'Administrator',
+    hakAkses: 'Full Monitoring'
   }
-}
+};

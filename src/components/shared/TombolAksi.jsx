@@ -1,132 +1,180 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState } from 'react';
 
-const TombolAksi = ({ umkmId, role }) => {
-  const navigate = useNavigate()
+const TombolAksi = ({ umkmData }) => {
+  const [showWhatsappConfirm, setShowWhatsappConfirm] = useState(false);
+  const [showInterestConfirm, setShowInterestConfirm] = useState(false);
+  const [showDataRequest, setShowDataRequest] = useState(false);
 
-  const actions = [
-    {
-      id: 'diskusi',
-      label: 'Diskusi Terstruktur',
-      description: 'Diskusi dengan format terstruktur',
-      icon: '💬',
-      color: '#3b82f6',
-      onClick: () => navigate(`/diskusi/${umkmId}`)
-    },
-    {
-      id: 'data',
-      label: 'Minta Data Tambahan',
-      description: 'Request data spesifik ke UMKM',
-      icon: '📋',
-      color: '#8b5cf6',
-      onClick: () => {
-        if (role === 'INVESTOR') {
-          alert('Fitur request data tambahan (simulasi)')
-        }
-      }
-    },
-    {
-      id: 'minat',
-      label: 'Ajukan Minat Investasi',
-      description: 'Ekspresikan minat untuk diskusi lebih lanjut',
-      icon: '🤝',
-      color: '#10b981',
-      onClick: () => {
-        if (role === 'INVESTOR') {
-          navigate(`/kesepakatan/${umkmId}`)
-        }
-      }
-    },
-    {
-      id: 'bandingkan',
-      label: 'Tambahkan ke Perbandingan',
-      description: 'Bandingkan dengan UMKM lain',
-      icon: '⚖️',
-      color: '#f59e0b',
-      onClick: () => {
-        const currentCompare = JSON.parse(localStorage.getItem('compareUMKM') || '[]')
-        if (!currentCompare.includes(umkmId)) {
-          currentCompare.push(umkmId)
-          localStorage.setItem('compareUMKM', JSON.stringify(currentCompare))
-          alert('UMKM ditambahkan ke daftar perbandingan')
-        }
-      }
-    }
-  ]
+  const handleWhatsappClick = () => {
+    setShowWhatsappConfirm(true);
+  };
 
-  // Filter actions berdasarkan role
-  const filteredActions = actions.filter(action => {
-    if (action.id === 'minat' && role !== 'INVESTOR') return false
-    if (action.id === 'data' && role !== 'INVESTOR') return false
-    return true
-  })
+  const handleConfirmWhatsapp = () => {
+    window.open(`https://wa.me/${umkmData.kontak}?text=Halo%20${umkmData.nama},%20saya%20investor%20dari%20platform%20UMKMInvest.%20Bisa%20berdiskusi%20lebih%20lanjut?`, '_blank');
+    setShowWhatsappConfirm(false);
+  };
+
+  const handleRequestData = () => {
+    setShowDataRequest(true);
+  };
+
+  const handleSubmitDataRequest = (requestedData) => {
+    alert(`Permintaan data telah dikirim ke ${umkmData.nama}`);
+    setShowDataRequest(false);
+  };
 
   return (
-    <div style={styles.container}>
-      <h3 style={styles.title}>Aksi yang Tersedia</h3>
-      <div style={styles.grid}>
-        {filteredActions.map((action) => (
-          <button
-            key={action.id}
-            style={{...styles.actionButton, backgroundColor: action.color}}
-            onClick={action.onClick}
-          >
-            <div style={styles.actionIcon}>{action.icon}</div>
-            <div style={styles.actionContent}>
-              <div style={styles.actionLabel}>{action.label}</div>
-              <div style={styles.actionDesc}>{action.description}</div>
+    <>
+      <div className="card border-0 shadow" data-aos="fade-up">
+        <div className="card-header bg-success text-white">
+          <h5 className="mb-0">Aksi yang Tersedia</h5>
+        </div>
+        <div className="card-body">
+          <div className="row g-3">
+            <div className="col-md-6">
+              <button 
+                className="btn btn-success w-100 d-flex align-items-center justify-content-center"
+                onClick={handleWhatsappClick}
+              >
+                <i className="fab fa-whatsapp me-2 fs-5"></i>
+                Hubungi via WhatsApp
+              </button>
+              <small className="text-muted d-block mt-2 text-center">
+                Komunikasi langsung dengan UMKM
+              </small>
             </div>
-          </button>
-        ))}
+            
+            <div className="col-md-6">
+              <button 
+                className="btn btn-outline-primary w-100 d-flex align-items-center justify-content-center"
+                onClick={() => setShowInterestConfirm(true)}
+              >
+                <i className="fas fa-handshake me-2"></i>
+                Ajukan Minat Investasi
+              </button>
+              <small className="text-muted d-block mt-2 text-center">
+                Mulai proses kesepakatan
+              </small>
+            </div>
+            
+            <div className="col-md-12">
+              <button 
+                className="btn btn-outline-info w-100 d-flex align-items-center justify-content-center"
+                onClick={handleRequestData}
+              >
+                <i className="fas fa-file-alt me-2"></i>
+                Minta Data Tambahan
+              </button>
+              <small className="text-muted d-block mt-2 text-center">
+                Minta dokumen spesifik yang belum tersedia
+              </small>
+            </div>
+          </div>
+          
+          <div className="alert alert-warning mt-4">
+            <div className="d-flex">
+              <i className="fas fa-exclamation-triangle me-3 mt-1"></i>
+              <div>
+                <small className="fw-bold">Peringatan:</small>
+                <small className="d-block">
+                  Semua komunikasi dan kesepakatan terjadi di luar platform. Platform tidak bertanggung jawab atas keputusan investasi Anda.
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  )
-}
 
-const styles = {
-  container: {
-    marginBottom: '2rem'
-  },
-  title: {
-    fontSize: '1.25rem',
-    fontWeight: '600',
-    color: '#1f2937',
-    marginBottom: '1rem'
-  },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-    gap: '1rem'
-  },
-  actionButton: {
-    backgroundColor: '#3b82f6',
-    color: 'white',
-    border: 'none',
-    borderRadius: '0.75rem',
-    padding: '1.5rem',
-    cursor: 'pointer',
-    textAlign: 'left',
-    transition: 'transform 0.2s',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    gap: '1rem'
-  },
-  actionIcon: {
-    fontSize: '2rem'
-  },
-  actionContent: {
-    flex: 1
-  },
-  actionLabel: {
-    fontSize: '1rem',
-    fontWeight: '600',
-    marginBottom: '0.25rem'
-  },
-  actionDesc: {
-    fontSize: '0.75rem',
-    opacity: 0.9
-  }
-}
+      {/* WhatsApp Confirmation Modal */}
+      {showWhatsappConfirm && (
+        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header bg-warning">
+                <h5 className="modal-title">Konfirmasi Kontak WhatsApp</h5>
+                <button type="button" className="btn-close" onClick={() => setShowWhatsappConfirm(false)}></button>
+              </div>
+              <div className="modal-body">
+                <div className="alert alert-danger">
+                  <h6><i className="fas fa-exclamation-triangle me-2"></i>PERINGATAN RISIKO</h6>
+                  <p className="small mb-2">Dengan menghubungi UMKM, Anda:</p>
+                  <ul className="small">
+                    <li>Keluar dari ekosistem platform</li>
+                    <li>Bertanggung jawab penuh atas komunikasi selanjutnya</li>
+                    <li>Bisa berhenti kapan saja tanpa kewajiban</li>
+                    <li>Tidak mendapat jaminan dari platform</li>
+                  </ul>
+                </div>
+                <div className="form-check mb-3">
+                  <input className="form-check-input" type="checkbox" id="understandRisk" />
+                  <label className="form-check-label small" htmlFor="understandRisk">
+                    Saya memahami semua risiko dan siap berkomunikasi di luar platform
+                  </label>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={() => setShowWhatsappConfirm(false)}>
+                  Batalkan
+                </button>
+                <button type="button" className="btn btn-success" onClick={handleConfirmWhatsapp}>
+                  <i className="fab fa-whatsapp me-2"></i>
+                  Buka WhatsApp
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
-export default TombolAksi
+      {/* Data Request Modal */}
+      {showDataRequest && (
+        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header bg-info text-white">
+                <h5 className="modal-title">Minta Data Tambahan</h5>
+                <button type="button" className="btn-close" onClick={() => setShowDataRequest(false)}></button>
+              </div>
+              <div className="modal-body">
+                <p className="mb-3">Pilih data yang ingin Anda minta dari {umkmData.nama}:</p>
+                <div className="border rounded p-3">
+                  {[
+                    'Laporan keuangan 6 bulan terakhir',
+                    'Bukti perizinan usaha lengkap',
+                    'Struktur organisasi dan job description',
+                    'Rencana bisnis 1 tahun ke depan',
+                    'Daftar pelanggan tetap',
+                    'Dokumen kontrak dengan supplier',
+                    'Sertifikat produk (jika ada)',
+                    'Dokumen aset dan inventaris'
+                  ].map((item, index) => (
+                    <div key={index} className="form-check mb-2">
+                      <input className="form-check-input" type="checkbox" id={`data${index}`} />
+                      <label className="form-check-label small" htmlFor={`data${index}`}>
+                        {item}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-3">
+                  <label className="form-label small">Catatan Tambahan (opsional):</label>
+                  <textarea className="form-control form-control-sm" rows="3" placeholder="Jelaskan kebutuhan data Anda..."></textarea>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={() => setShowDataRequest(false)}>
+                  Batalkan
+                </button>
+                <button type="button" className="btn btn-primary" onClick={() => handleSubmitDataRequest()}>
+                  Kirim Permintaan
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default TombolAksi;

@@ -1,108 +1,60 @@
-import React from 'react'
+import React from 'react';
 
 const ChecklistTidakDijanjikan = () => {
-  const checklistItems = [
-    {
-      id: 1,
-      text: 'Tidak menjanjikan ROI (Return on Investment)',
-      description: 'Platform tidak memberikan proyeksi keuntungan investasi'
-    },
-    {
-      id: 2,
-      text: 'Tidak menjamin balik modal',
-      description: 'Investor menanggung risiko penuh atas investasi'
-    },
-    {
-      id: 3,
-      text: 'Tidak ada rekomendasi investasi',
-      description: 'Semua keputusan investasi dibuat secara mandiri'
-    },
-    {
-      id: 4,
-      text: 'Tidak memverifikasi data keuangan',
-      description: 'Validitas data menjadi tanggung jawab masing-masing pihak'
-    }
-  ]
+  const items = [
+    'Keuntungan atau Return on Investment (ROI) tertentu',
+    'Pengembalian dana investasi',
+    'Keberhasilan bisnis UMKM',
+    'Rekomendasi investasi dari platform',
+    'Jaminan legalitas sempurna',
+    'Minimal risiko kerugian',
+    'Kemudahan exit strategy',
+    'Data yang 100% akurat tanpa verifikasi mandiri',
+    'Komitmen waktu tertentu dari UMKM',
+    'Performa masa depan berdasarkan data historis'
+  ];
 
   return (
-    <div style={styles.container}>
-      <h3 style={styles.title}>Apa yang Tidak Dijanjikan Platform</h3>
-      <p style={styles.subtitle}>
-        Transparansi tentang batasan platform untuk menghindari ekspektasi yang tidak realistis
-      </p>
-      
-      <div style={styles.checklist}>
-        {checklistItems.map((item) => (
-          <div key={item.id} style={styles.checklistItem}>
-            <div style={styles.checkbox}>❌</div>
-            <div style={styles.checklistContent}>
-              <div style={styles.checklistText}>{item.text}</div>
-              <div style={styles.checklistDesc}>{item.description}</div>
+    <div className="card border-danger border-2" data-aos="fade-up">
+      <div className="card-header bg-danger text-white">
+        <h5 className="mb-0">
+          <i className="fas fa-exclamation-triangle me-2"></i>
+          YANG TIDAK DIJANJIKAN PLATFORM
+        </h5>
+      </div>
+      <div className="card-body">
+        <p className="text-muted mb-4">
+          Platform ini bersifat informatif dan transparan. Berikut hal-hal yang TIDAK kami janjikan:
+        </p>
+        
+        <div className="row">
+          {items.map((item, index) => (
+            <div key={index} className="col-md-6 mb-3">
+              <div className="border-start border-danger border-3 ps-3 py-1">
+                <div className="d-flex align-items-start">
+                  <i className="fas fa-times text-danger me-2 mt-1"></i>
+                  <span className="small">{item}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <div className="alert alert-warning mt-4">
+          <div className="d-flex">
+            <i className="fas fa-info-circle me-3 mt-1"></i>
+            <div>
+              <small>
+                Platform hanya menyediakan informasi berdasarkan data yang diberikan UMKM.
+                Keputusan investasi sepenuhnya menjadi tanggung jawab masing-masing pihak.
+                Selalu lakukan due diligence mandiri sebelum mengambil keputusan.
+              </small>
             </div>
           </div>
-        ))}
-      </div>
-      
-      <div style={styles.note}>
-        <p>
-          <strong>Platform fokus pada:</strong> Penyaringan risiko, transparansi data, 
-          dan edukasi kesiapan investasi — bukan sebagai penjamin kesuksesan investasi.
-        </p>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-const styles = {
-  container: {
-    backgroundColor: '#fef2f2',
-    borderRadius: '0.75rem',
-    padding: '1.5rem',
-    marginBottom: '2rem',
-    border: '1px solid #fecaca'
-  },
-  title: {
-    fontSize: '1.25rem',
-    fontWeight: 'bold',
-    color: '#dc2626',
-    marginBottom: '0.5rem'
-  },
-  subtitle: {
-    color: '#92400e',
-    fontSize: '0.875rem',
-    marginBottom: '1.5rem'
-  },
-  checklist: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem'
-  },
-  checklistItem: {
-    display: 'flex',
-    gap: '1rem',
-    alignItems: 'flex-start'
-  },
-  checkbox: {
-    fontSize: '1.5rem',
-    flexShrink: 0
-  },
-  checklistContent: {
-    flex: 1
-  },
-  checklistText: {
-    fontWeight: '600',
-    color: '#991b1b',
-    marginBottom: '0.25rem'
-  },
-  checklistDesc: {
-    fontSize: '0.875rem',
-    color: '#7f1d1d'
-  },
-  note: {
-    marginTop: '1.5rem',
-    paddingTop: '1rem',
-    borderTop: '1px solid #fecaca'
-  }
-}
-
-export default ChecklistTidakDijanjikan
+export default ChecklistTidakDijanjikan;

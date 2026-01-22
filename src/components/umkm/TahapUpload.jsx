@@ -1,287 +1,189 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
-const TahapUpload = () => {
-  const [currentStep, setCurrentStep] = useState(1)
-  
-  const steps = [
-    {
-      id: 1,
+const TahapUpload = ({ tahap, onComplete }) => {
+  const [formData, setFormData] = useState({
+    statusUsaha: '',
+    omzet: '',
+    karyawan: '',
+    legalitas: ''
+  });
+
+  const [bukti, setBukti] = useState([]);
+
+  const tahapConfig = {
+    1: {
       title: 'Tahap 1 — Fakta Dasar',
-      description: 'Data ini digunakan untuk menilai kesiapan operasional, bukan potensi keuntungan.',
       fields: [
-        { id: 'status', label: 'Status Usaha', type: 'select', options: ['Rencana', 'Berjalan (<1 tahun)', 'Berjalan (1-3 tahun)', 'Berjalan (3-5 tahun)', 'Berjalan (>5 tahun)'] },
-        { id: 'omzet', label: 'Range Omzet Tahunan', type: 'select', options: ['< Rp 50 juta', 'Rp 50-100 juta', 'Rp 100-500 juta', 'Rp 500 juta - 1 M', '> Rp 1 M'] },
-        { id: 'karyawan', label: 'Jumlah Karyawan', type: 'select', options: ['1-2 orang', '2-5 orang', '5-10 orang', '10-20 orang', '>20 orang'] },
-        { id: 'legalitas', label: 'Legalitas Usaha', type: 'select', options: ['Belum berbadan hukum', 'UMKM (NIB)', 'CV', 'PT', 'Koperasi'] }
+        { name: 'statusUsaha', label: 'Status Usaha', type: 'select', options: ['Berjalan', 'Rencana', 'Baru Mulai'] },
+        { name: 'omzet', label: 'Range Omzet per Bulan', type: 'select', options: ['< 5 juta', '5-10 juta', '10-25 juta', '25-50 juta', '> 50 juta'] },
+        { name: 'karyawan', label: 'Jumlah Karyawan', type: 'number', placeholder: '0' },
+        { name: 'legalitas', label: 'Legalitas Usaha', type: 'select', options: ['Belum Ada', 'NIB', 'SIUP', 'TDP', 'Lainnya'] }
       ]
     },
-    {
-      id: 2,
+    2: {
       title: 'Tahap 2 — Masalah & Solusi',
-      description: 'Digunakan untuk menilai validitas masalah, bukan keunikan ide.',
       fields: [
-        { id: 'masalah', label: 'Masalah Nyata yang Dihadapi', type: 'textarea', placeholder: 'Jelaskan masalah utama bisnis Anda saat ini...' },
-        { id: 'solusi', label: 'Solusi yang Sudah/Sedang Diterapkan', type: 'textarea', placeholder: 'Jelaskan solusi yang sudah dilakukan...' },
-        { id: 'bukti', label: 'Bukti Sederhana (Opsional)', type: 'textarea', placeholder: 'Data, testimoni, atau bukti lain yang mendukung...' }
+        { name: 'masalah', label: 'Deskripsi Masalah Nyata', type: 'textarea', placeholder: 'Jelaskan masalah utama yang dihadapi...' },
+        { name: 'solusi', label: 'Solusi yang Diterapkan', type: 'textarea', placeholder: 'Bagaimana solusi yang sudah/sedang dilakukan...' }
       ]
     },
-    {
-      id: 3,
+    3: {
       title: 'Tahap 3 — Kesiapan Investasi',
-      description: 'Digunakan untuk menilai kesiapan menghadapi kegagalan.',
       fields: [
-        { id: 'penggunaan', label: 'Penggunaan Dana Investasi', type: 'textarea', placeholder: 'Jelaskan secara spesifik penggunaan dana...' },
-        { id: 'risiko', label: 'Risiko Terburuk yang Mungkin Terjadi', type: 'textarea', placeholder: 'Identifikasi risiko terbesar jika investasi gagal...' },
-        { id: 'transparansi', label: 'Kesediaan Transparansi', type: 'select', options: ['Tidak bersedia', 'Bersedia dengan batasan', 'Bersedia penuh termasuk audit'] }
+        { name: 'penggunaanDana', label: 'Penggunaan Dana Detail', type: 'textarea', placeholder: 'Rincian penggunaan dana investasi...' },
+        { name: 'risikoTerburuk', label: 'Risiko Terburuk yang Mungkin Terjadi', type: 'textarea', placeholder: 'Identifikasi risiko terburuk...' },
+        { name: 'kesediaanLaporan', label: 'Kesediaan Berbagi Laporan', type: 'checkbox', options: ['Laporan Keuangan', 'Laporan Operasional', 'Laporan Pemasaran'] }
       ]
     }
-  ]
+  };
 
-  const handleNext = () => {
-    if (currentStep < 3) {
-      setCurrentStep(currentStep + 1)
-    }
-  }
+  const handleFileUpload = (e) => {
+    const files = Array.from(e.target.files);
+    setBukti([...bukti, ...files.map(file => ({
+      name: file.name,
+      size: file.size,
+      type: file.type
+    }))]);
+  };
 
-  const handlePrev = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1)
-    }
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert(`Data Tahap ${tahap} berhasil disimpan!`);
+    if (onComplete) onComplete();
+  };
 
-  const currentStepData = steps.find(step => step.id === currentStep)
+  const config = tahapConfig[tahap];
+
+  if (!config) return null;
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <h2 style={styles.title}>Upload Data Usaha Bertahap</h2>
-        <p style={styles.subtitle}>
-          Prinsip: UMKM tidak dapat melompat tahap untuk menjaga konsistensi penilaian.
-        </p>
+    <div className="card border-0 shadow-lg" data-aos="fade-up">
+      <div className="card-header bg-primary text-white">
+        <h4 className="mb-0">{config.title}</h4>
       </div>
-
-      <div style={styles.stepIndicator}>
-        {steps.map((step) => (
-          <div key={step.id} style={styles.step}>
-            <div 
-              style={{
-                ...styles.stepNumber,
-                backgroundColor: step.id === currentStep ? '#2563eb' : step.id < currentStep ? '#10b981' : '#e5e7eb',
-                color: step.id <= currentStep ? 'white' : '#9ca3af'
-              }}
-            >
-              {step.id}
-            </div>
-            <div style={styles.stepInfo}>
-              <div style={styles.stepTitle}>{step.title}</div>
-              {step.id === currentStep && (
-                <div style={styles.stepDescription}>{step.description}</div>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div style={styles.formContainer}>
-        <h3 style={styles.formTitle}>{currentStepData.title}</h3>
-        <p style={styles.formDescription}>{currentStepData.description}</p>
-
-        <form style={styles.form}>
-          {currentStepData.fields.map((field) => (
-            <div key={field.id} style={styles.formGroup}>
-              <label htmlFor={field.id} style={styles.label}>
-                {field.label}
-              </label>
-              
+      <div className="card-body">
+        <form onSubmit={handleSubmit}>
+          {config.fields.map((field) => (
+            <div key={field.name} className="mb-4">
+              <label className="form-label fw-bold">{field.label} *</label>
               {field.type === 'select' ? (
-                <select id={field.id} style={styles.select}>
-                  <option value="">Pilih opsi...</option>
-                  {field.options.map((option, index) => (
-                    <option key={index} value={option}>{option}</option>
+                <select
+                  className="form-select"
+                  value={formData[field.name] || ''}
+                  onChange={(e) => setFormData({...formData, [field.name]: e.target.value})}
+                  required
+                >
+                  <option value="">Pilih {field.label}</option>
+                  {field.options.map(opt => (
+                    <option key={opt} value={opt}>{opt}</option>
                   ))}
                 </select>
-              ) : (
-                <textarea 
-                  id={field.id} 
-                  style={styles.textarea}
-                  placeholder={field.placeholder}
+              ) : field.type === 'textarea' ? (
+                <textarea
+                  className="form-control"
                   rows={4}
+                  value={formData[field.name] || ''}
+                  onChange={(e) => setFormData({...formData, [field.name]: e.target.value})}
+                  placeholder={field.placeholder}
+                  required
+                />
+              ) : field.type === 'checkbox' ? (
+                <div className="border rounded p-3">
+                  {field.options.map(opt => (
+                    <div key={opt} className="form-check mb-2">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id={opt}
+                        checked={formData[field.name]?.includes(opt) || false}
+                        onChange={(e) => {
+                          const checked = e.target.checked;
+                          setFormData(prev => ({
+                            ...prev,
+                            [field.name]: checked 
+                              ? [...(prev[field.name] || []), opt]
+                              : (prev[field.name] || []).filter(item => item !== opt)
+                          }));
+                        }}
+                      />
+                      <label className="form-check-label" htmlFor={opt}>
+                        {opt}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <input
+                  type={field.type}
+                  className="form-control"
+                  value={formData[field.name] || ''}
+                  onChange={(e) => setFormData({...formData, [field.name]: e.target.value})}
+                  placeholder={field.placeholder}
+                  required
                 />
               )}
             </div>
           ))}
+
+          <div className="mb-4">
+            <label className="form-label fw-bold">Upload Bukti Pendukung</label>
+            <div className="border rounded p-4 text-center">
+              <input
+                type="file"
+                className="d-none"
+                id="fileUpload"
+                multiple
+                onChange={handleFileUpload}
+              />
+              <label htmlFor="fileUpload" className="btn btn-outline-primary mb-3">
+                <i className="fas fa-cloud-upload-alt me-2"></i>
+                Pilih File
+              </label>
+              <p className="text-muted small mb-2">Format: JPG, PNG, PDF (Max 5MB per file)</p>
+              
+              {bukti.length > 0 && (
+                <div className="mt-3">
+                  <h6 className="mb-2">File Terupload:</h6>
+                  {bukti.map((file, index) => (
+                    <div key={index} className="d-flex justify-content-between align-items-center border rounded p-2 mb-2">
+                      <div>
+                        <i className="fas fa-file me-2"></i>
+                        <span>{file.name}</span>
+                      </div>
+                      <small className="text-muted">{(file.size / 1024).toFixed(1)} KB</small>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="alert alert-warning">
+            <div className="d-flex">
+              <i className="fas fa-exclamation-triangle me-3 mt-1"></i>
+              <div>
+                <small className="fw-bold">Validasi Sistem:</small>
+                <small className="d-block">
+                  Data akan divalidasi oleh sistem dan mentor. Ketidaksesuaian dapat menurunkan skor Anda.
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <div className="d-flex justify-content-between mt-4">
+            {tahap > 1 && (
+              <button type="button" className="btn btn-outline-secondary">
+                Tahap Sebelumnya
+              </button>
+            )}
+            <button type="submit" className="btn btn-primary ms-auto">
+              Simpan dan Lanjut
+            </button>
+          </div>
         </form>
-
-        <div style={styles.note}>
-          <p><strong>Catatan Sistem:</strong> Data yang diisi akan mempengaruhi skor kesiapan investasi.</p>
-        </div>
-
-        <div style={styles.buttons}>
-          {currentStep > 1 && (
-            <button onClick={handlePrev} style={styles.secondaryButton}>
-              Kembali
-            </button>
-          )}
-          
-          {currentStep < 3 ? (
-            <button onClick={handleNext} style={styles.primaryButton}>
-              Lanjut ke Tahap {currentStep + 1}
-            </button>
-          ) : (
-            <button style={styles.primaryButton}>
-              Simpan dan Lihat Skor
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div style={styles.demoNote}>
-        <p><strong>Mode demonstrasi:</strong> Form ini hanya simulasi UI. Data tidak disimpan.</p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-const styles = {
-  container: {
-    backgroundColor: 'white',
-    borderRadius: '1rem',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    padding: '2rem',
-    marginBottom: '2rem'
-  },
-  header: {
-    marginBottom: '2rem'
-  },
-  title: {
-    fontSize: '1.875rem',
-    fontWeight: 'bold',
-    color: '#1f2937',
-    marginBottom: '0.5rem'
-  },
-  subtitle: {
-    color: '#6b7280'
-  },
-  stepIndicator: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem',
-    marginBottom: '3rem',
-    position: 'relative'
-  },
-  step: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '1rem',
-    position: 'relative',
-    zIndex: 1
-  },
-  stepNumber: {
-    width: '40px',
-    height: '40px',
-    borderRadius: '50%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontWeight: 'bold',
-    fontSize: '1.125rem',
-    flexShrink: 0
-  },
-  stepInfo: {
-    flex: 1,
-    paddingTop: '0.5rem'
-  },
-  stepTitle: {
-    fontWeight: '600',
-    color: '#1f2937',
-    marginBottom: '0.25rem'
-  },
-  stepDescription: {
-    fontSize: '0.875rem',
-    color: '#6b7280'
-  },
-  formContainer: {
-    marginBottom: '2rem'
-  },
-  formTitle: {
-    fontSize: '1.5rem',
-    fontWeight: '600',
-    color: '#1f2937',
-    marginBottom: '0.5rem'
-  },
-  formDescription: {
-    color: '#6b7280',
-    marginBottom: '2rem',
-    fontSize: '0.875rem'
-  },
-  form: {
-    marginBottom: '2rem'
-  },
-  formGroup: {
-    marginBottom: '1.5rem'
-  },
-  label: {
-    display: 'block',
-    fontSize: '0.875rem',
-    fontWeight: '600',
-    color: '#374151',
-    marginBottom: '0.5rem'
-  },
-  select: {
-    width: '100%',
-    padding: '0.75rem',
-    border: '1px solid #d1d5db',
-    borderRadius: '0.5rem',
-    fontSize: '1rem',
-    backgroundColor: 'white'
-  },
-  textarea: {
-    width: '100%',
-    padding: '0.75rem',
-    border: '1px solid #d1d5db',
-    borderRadius: '0.5rem',
-    fontSize: '1rem',
-    fontFamily: 'inherit',
-    resize: 'vertical'
-  },
-  note: {
-    backgroundColor: '#eff6ff',
-    padding: '1rem',
-    borderRadius: '0.5rem',
-    marginBottom: '1.5rem'
-  },
-  buttons: {
-    display: 'flex',
-    gap: '1rem'
-  },
-  primaryButton: {
-    backgroundColor: '#2563eb',
-    color: 'white',
-    padding: '0.75rem 1.5rem',
-    border: 'none',
-    borderRadius: '0.5rem',
-    cursor: 'pointer',
-    fontWeight: '600',
-    flex: 1
-  },
-  secondaryButton: {
-    backgroundColor: '#f3f4f6',
-    color: '#4b5563',
-    padding: '0.75rem 1.5rem',
-    border: '1px solid #d1d5db',
-    borderRadius: '0.5rem',
-    cursor: 'pointer',
-    fontWeight: '600',
-    flex: 1
-  },
-  demoNote: {
-    backgroundColor: '#fef3c7',
-    padding: '1rem',
-    borderRadius: '0.5rem',
-    textAlign: 'center',
-    color: '#92400e',
-    fontSize: '0.875rem'
-  }
-}
-
-export default TahapUpload
+export default TahapUpload;

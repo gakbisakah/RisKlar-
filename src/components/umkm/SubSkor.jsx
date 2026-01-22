@@ -1,174 +1,100 @@
-import React from 'react'
+import React from 'react';
+import { ProgressBar } from 'react-bootstrap';
 
-const SubSkor = ({ skorData }) => {
-  const subSkorItems = [
-    {
-      id: 'legalitas',
-      label: 'Legalitas Dasar',
-      value: skorData.legalitas,
-      description: 'Kelengkapan dokumen legal usaha'
-    },
-    {
-      id: 'kejelasan',
-      label: 'Kejelasan Usaha',
-      value: skorData.kejelasanUsaha,
-      description: 'Kejelasan model bisnis dan target pasar'
-    },
-    {
-      id: 'keuangan',
-      label: 'Realistis Keuangan',
-      value: skorData.realistisKeuangan,
-      description: 'Kecukupan dan realisme data keuangan'
-    },
-    {
-      id: 'risiko',
-      label: 'Risiko Operasional',
-      value: skorData.risikoOperasional,
-      description: 'Identifikasi dan mitigasi risiko'
-    }
-  ]
+const SubSkor = ({ scoreData }) => {
+  const scores = scoreData || {
+    legalitas: 65,
+    modelBisnis: 78,
+    keuangan: 70,
+    operasional: 75
+  };
 
-  const getColor = (value) => {
-    if (value < 50) return '#ef4444'
-    if (value < 70) return '#f59e0b'
-    return '#10b981'
-  }
+  const getColor = (score) => {
+    if (score >= 75) return 'success';
+    if (score >= 50) return 'warning';
+    return 'danger';
+  };
+
+  const getLabel = (score) => {
+    if (score >= 75) return 'Baik';
+    if (score >= 50) return 'Cukup';
+    return 'Perlu Perbaikan';
+  };
 
   return (
-    <div style={styles.container}>
-      <h3 style={styles.title}>Detail Sub-Skor Kesiapan</h3>
-      <p style={styles.subtitle}>
-        Detail penilaian berdasarkan kategori kesiapan investasi
-      </p>
-      
-      <div style={styles.grid}>
-        {subSkorItems.map((item) => (
-          <div key={item.id} style={styles.card}>
-            <div style={styles.cardHeader}>
-              <div style={{ ...styles.skorCircle, borderColor: getColor(item.value) }}>
-                  <span style={{ ...styles.skorValue, color: getColor(item.value) }}>
-                  {item.value}%
+    <div className="card border-0 shadow" data-aos="fade-up">
+      <div className="card-header bg-white border-0">
+        <h4 className="mb-0">Analisis Skor Detail</h4>
+      </div>
+      <div className="card-body">
+        {Object.entries(scores).map(([key, value]) => (
+          <div key={key} className="mb-4">
+            <div className="d-flex justify-content-between mb-2">
+              <div>
+                <h6 className="mb-0 text-capitalize">{key.replace(/([A-Z])/g, ' $1')}</h6>
+                <small className="text-muted">Nilai: {value}%</small>
+              </div>
+              <div>
+                <span className={`badge bg-${getColor(value)}`}>
+                  {getLabel(value)}
                 </span>
               </div>
-              <h4 style={styles.cardTitle}>{item.label}</h4>
             </div>
-            
-            <div style={styles.progressContainer}>
-              <div style={styles.progressBar}>
-                <div 
-                  style={{ 
-                    ...styles.progressFill, 
-                    width: `${item.value}%`,
-                    backgroundColor: getColor(item.value)
-                  }}
-                ></div>
-              </div>
-            </div>
-            
-            <p style={styles.description}>{item.description}</p>
-            
-            <div style={styles.tips}>
-              <strong>Tips perbaikan:</strong> {getImprovementTip(item.id)}
+            <ProgressBar
+              now={value}
+              variant={getColor(value)}
+              className="mb-3"
+              style={{ height: '10px', borderRadius: '5px' }}
+            />
+            <div className="edu-info">
+              {value < 75 && (
+                <div className={`alert alert-${getColor(value)} border-0 py-2`}>
+                  <small>
+                    <i className="fas fa-lightbulb me-2"></i>
+                    {key === 'legalitas' && 'Perkuat legalitas usaha dengan perizinan yang lengkap'}
+                    {key === 'modelBisnis' && 'Kembangkan model bisnis yang lebih sustainable'}
+                    {key === 'keuangan' && 'Tingkatkan pencatatan keuangan dan cash flow management'}
+                    {key === 'operasional' && 'Optimalkan proses operasional dan dokumentasi'}
+                  </small>
+                </div>
+              )}
             </div>
           </div>
         ))}
+        
+        <div className="mt-4">
+          <div className="row">
+            <div className="col-md-6">
+              <div className="card border-0 bg-light">
+                <div className="card-body">
+                  <h6 className="mb-2">Rata-rata Industri</h6>
+                  <div className="d-flex align-items-center">
+                    <div className="flex-grow-1">
+                      <ProgressBar now={68} variant="info" className="mb-1" />
+                    </div>
+                    <span className="ms-2 fw-bold">68%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-6">
+              <div className="card border-0 bg-light">
+                <div className="card-body">
+                  <h6 className="mb-2">Target Minimal Investor</h6>
+                  <div className="d-flex align-items-center">
+                    <div className="flex-grow-1">
+                      <ProgressBar now={65} variant="success" className="mb-1" />
+                    </div>
+                    <span className="ms-2 fw-bold">65%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-const getImprovementTip = (id) => {
-  const tips = {
-    legalitas: 'Lengkapi dokumen legal sesuai jenis usaha (SIUP, TDP, atau akta notaris)',
-    kejelasan: 'Perjelas target pasar dan unique selling proposition',
-    keuangan: 'Sediakan laporan keuangan minimal 6 bulan terakhir',
-    risiko: 'Buat rencana mitigasi untuk risiko utama bisnis'
-  }
-  return tips[id] || 'Perbaiki data dan konsistensi informasi'
-}
-
-const styles = {
-  container: {
-    backgroundColor: 'white',
-    borderRadius: '1rem',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    padding: '2rem',
-    marginBottom: '2rem'
-  },
-  title: {
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-    color: '#1f2937',
-    marginBottom: '0.5rem'
-  },
-  subtitle: {
-    color: '#6b7280',
-    marginBottom: '2rem'
-  },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-    gap: '1.5rem'
-  },
-  card: {
-    padding: '1.5rem',
-    border: '1px solid #e5e7eb',
-    borderRadius: '0.75rem',
-    backgroundColor: '#f9fafb'
-  },
-  cardHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '1rem',
-    marginBottom: '1rem'
-  },
-  skorCircle: {
-    width: '60px',
-    height: '60px',
-    borderRadius: '50%',
-    border: '3px solid',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0
-  },
-  skorValue: {
-    fontSize: '1.25rem',
-    fontWeight: 'bold'
-  },
-  cardTitle: {
-    fontSize: '1.125rem',
-    fontWeight: '600',
-    color: '#1f2937',
-    margin: 0
-  },
-  progressContainer: {
-    marginBottom: '1rem'
-  },
-  progressBar: {
-    height: '0.5rem',
-    backgroundColor: '#e5e7eb',
-    borderRadius: '0.25rem',
-    overflow: 'hidden'
-  },
-  progressFill: {
-    height: '100%',
-    transition: 'width 0.3s ease'
-  },
-  description: {
-    fontSize: '0.875rem',
-    color: '#6b7280',
-    marginBottom: '1rem',
-    lineHeight: '1.5'
-  },
-  tips: {
-    fontSize: '0.75rem',
-    color: '#4b5563',
-    backgroundColor: '#f3f4f6',
-    padding: '0.75rem',
-    borderRadius: '0.375rem',
-    borderLeft: '3px solid #2563eb'
-  }
-}
-
-export default SubSkor
+export default SubSkor;
