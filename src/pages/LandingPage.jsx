@@ -44,14 +44,7 @@ const LandingPage = () => {
                     Mulai perjalanan investasi UMKM yang lebih transparan dan bertanggung jawab.
                   </p>
                   <div className="d-flex flex-wrap justify-content-center gap-3">
-                    <a href="/auth" className="btn btn-gradient-primary btn-lg px-5 py-3">
-                      <i className="fas fa-rocket me-2"></i>
-                      Daftar Sekarang
-                    </a>
-                    <a href="/auth" className="btn btn-outline-primary btn-lg px-5 py-3">
-                      <i className="fas fa-sign-in-alt me-2"></i>
-                      Masuk ke Akun
-                    </a>
+                   
                   </div>
                   <div className="mt-4">
                     <div className="alert alert-light border-0 rounded-pill d-inline-block px-4">
